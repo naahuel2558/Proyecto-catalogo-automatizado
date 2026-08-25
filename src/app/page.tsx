@@ -9,7 +9,7 @@ import CartSummary from '@/components/CartSummary';
 import CheckoutModal from '@/components/CheckoutModal';
 
 // Número oficial de WhatsApp de la rotisería Entre Panes
-const ROTISERIA_WHATSAPP_NUMBER = '5493582435386';
+const ROTISERIA_WHATSAPP_NUMBER = '5493585762463';
 
 export default function MenuPage() {
   const [products] = useState<Product[]>(INITIAL_PRODUCTS);
@@ -24,7 +24,9 @@ export default function MenuPage() {
   // Campos del formulario
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('+54 ');
-  const [locationDetails, setLocationDetails] = useState('');
+  const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
+  const [orderDetails, setOrderDetails] = useState('');
+  const [deliveryAddress, setDeliveryAddress] = useState('');
 
   // Incrementar cantidad de producto
   const handleIncrease = (productId: string) => {
@@ -61,8 +63,12 @@ export default function MenuPage() {
   const handleComprar = async (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedItems.length === 0) return;
-    if (!customerName || !customerPhone || customerPhone.trim() === '+54' || !locationDetails) {
-      alert('Por favor completa tu Nombre, Celular (con +54) y Aclaración del Lugar.');
+    if (!customerName || !customerPhone || customerPhone.trim() === '+54') {
+      alert('Por favor completa tu Nombre y Celular (con +54).');
+      return;
+    }
+    if (deliveryMethod === 'delivery' && !deliveryAddress.trim()) {
+      alert('Por favor completa los detalles de dónde enviar el pedido.');
       return;
     }
 
@@ -78,17 +84,23 @@ export default function MenuPage() {
       itemsText += `${item.quantity}x _${item.product.name}_\n`;
     });
 
+    const deliveryText = deliveryMethod === 'delivery' 
+      ? `_Envío a domicilio_\n\n_Dirección / Detalles de envío:_\n${deliveryAddress}` 
+      : `_Retira en el local_`;
+
+    const notesText = orderDetails ? `\n\n_Detalles del pedido:_\n${orderDetails}` : '';
+
     // Formato estructurado del recibo
-    const receiptText = `_Entre Panes - Recibo de Pedido_\n\n_Número de pedido:_\n${orderId}\n\n_Nombre:_\n${customerName}\n\n_Celular del cliente:_\n${customerPhone}\n\n_Dirección / Aclaración del lugar:_\n${locationDetails}\n\n_Fecha y Hora:_\n${formattedDate}\n\n${itemsText}\n_Valor Total:_\n$${totalPrice.toLocaleString('es-AR')}.00`;
+    const receiptText = `_Entre Panes - Recibo de Pedido_\n\n_Número de pedido:_\n${orderId}\n\n_Nombre:_\n${customerName}\n\n_Celular del cliente:_\n${customerPhone}\n\n${deliveryText}${notesText}\n\n_Fecha y Hora:_\n${formattedDate}\n\n${itemsText}\n_Valor Total:_\n$${totalPrice.toLocaleString('es-AR')}.00`;
 
     // Registrar pedido en localStorage para que el personal del local lo vea en /cocina
     const newOrder: Order = {
       id: orderId,
       customerName,
       customerPhone,
-      address: locationDetails,
-      deliveryNotes: locationDetails,
-      isPickup: false,
+      address: deliveryMethod === 'delivery' ? deliveryAddress : 'Retira en local',
+      deliveryNotes: orderDetails,
+      isPickup: deliveryMethod === 'pickup',
       items: selectedItems,
       totalAmount: totalPrice,
       paymentMethod: 'Efectivo',
@@ -112,7 +124,7 @@ export default function MenuPage() {
         body: JSON.stringify({
           customerName,
           customerPhone,
-          locationDetails,
+          locationDetails: deliveryMethod === 'delivery' ? deliveryAddress : 'Retira en local',
           receiptText,
           order: newOrder,
         }),
@@ -175,8 +187,12 @@ export default function MenuPage() {
           setCustomerName={setCustomerName}
           customerPhone={customerPhone}
           setCustomerPhone={setCustomerPhone}
-          locationDetails={locationDetails}
-          setLocationDetails={setLocationDetails}
+          deliveryMethod={deliveryMethod}
+          setDeliveryMethod={setDeliveryMethod}
+          orderDetails={orderDetails}
+          setOrderDetails={setOrderDetails}
+          deliveryAddress={deliveryAddress}
+          setDeliveryAddress={setDeliveryAddress}
           isSending={isSending}
           orderCompleted={orderCompleted}
           onClose={handleCloseModal}

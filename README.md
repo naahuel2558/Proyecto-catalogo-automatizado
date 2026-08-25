@@ -7,7 +7,7 @@ Sistema inteligente de automatización de pedidos por WhatsApp y Catálogo Web i
 ## 📌 1. Visión General y Problema a Solucionar
 
 * **Negocio**: Rotisería & Casa de Comidas *"Entre Panes"*.
-* **Número de WhatsApp de la Rotisería**: `+54 9 3582 435386` (`54935582435386`).
+* **Número de WhatsApp de la Rotisería**: `+54 9 3585 762463` (`5493585762463`).
 * **URL en Vivo (Producción Vercel)**: **[https://ia-entre-panes.vercel.app](https://ia-entre-panes.vercel.app)**.
 * **Problema Resuelto**: Eliminación de la atención manual por WhatsApp en horas pico. Ahora los clientes reciben una respuesta automática inmediata con el catálogo web, arman su carrito con botones directos `- 0 +` y envían su recibo listo directamente a la rotisería.
 
@@ -19,7 +19,7 @@ Sistema inteligente de automatización de pedidos por WhatsApp y Catálogo Web i
 sequenceDiagram
     autonumber
     actor Cliente
-    participant WA as 💬 WhatsApp Rotisería (+54 9 3582 435386)
+    participant WA as 💬 WhatsApp Rotisería (+54 9 3585 762463)
     participant Web as 🍔 Catálogo Web (Vercel)
     participant Cocina as 👨‍🍳 Vista Recibos (/cocina)
 
@@ -43,7 +43,7 @@ sequenceDiagram
   * 👤 **Nombre Completo**.
   * 📞 **Celular (WhatsApp)**: Pre-configurado por defecto con `+54 ` para evitar errores de código de país.
   * 📍 **Aclaración del Lugar / Dirección de Envío**.
-* **Destino del Recibo**: Al hacer clic en *"Generar y Enviar Recibo a WhatsApp"*, se abre WhatsApp con la comanda dirigida a la rotisería (`+54 9 3582 435386`).
+* **Destino del Recibo**: Al hacer clic en *"Generar y Enviar Recibo a WhatsApp"*, se abre WhatsApp con la comanda dirigida a la rotisería (`+54 9 3585 762463`).
 
 ### B. Vista de Recibos para el Personal (`src/app/cocina/page.tsx`)
 * Accesible mediante el enlace **`https://ia-entre-panes.vercel.app/cocina`**.
@@ -77,7 +77,7 @@ Estamos a tu disposición!
 
 👉🏻 ALIAS: entrepanes.mp
 🧒🏻 Titular: ENTRE PANES S.A.S.
-📞 Teléfono: +54 9 3582 435386
+📞 Teléfono: +54 9 3585 762463
 
 *LAS PROMOS SON SOLAMENTE EN EFECTIVO*
 ```

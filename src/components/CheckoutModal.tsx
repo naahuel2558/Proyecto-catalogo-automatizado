@@ -6,8 +6,12 @@ interface CheckoutModalProps {
   setCustomerName: (val: string) => void;
   customerPhone: string;
   setCustomerPhone: (val: string) => void;
-  locationDetails: string;
-  setLocationDetails: (val: string) => void;
+  deliveryMethod: 'delivery' | 'pickup';
+  setDeliveryMethod: (val: 'delivery' | 'pickup') => void;
+  orderDetails: string;
+  setOrderDetails: (val: string) => void;
+  deliveryAddress: string;
+  setDeliveryAddress: (val: string) => void;
   isSending: boolean;
   orderCompleted: { id: string; phone: string; whatsappUrl: string } | null;
   onClose: () => void;
@@ -20,8 +24,12 @@ export default function CheckoutModal({
   setCustomerName,
   customerPhone,
   setCustomerPhone,
-  locationDetails,
-  setLocationDetails,
+  deliveryMethod,
+  setDeliveryMethod,
+  orderDetails,
+  setOrderDetails,
+  deliveryAddress,
+  setDeliveryAddress,
   isSending,
   orderCompleted,
   onClose,
@@ -93,6 +101,20 @@ export default function CheckoutModal({
           /* Formulario de compra */
           <form onSubmit={onSubmit} className="space-y-4">
             <div className="space-y-3">
+              {/* Selector Delivery / Retiro */}
+              <div className="flex gap-3 mb-2">
+                <label className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl border cursor-pointer transition-all ${deliveryMethod === 'delivery' ? 'bg-primary-container border-primary text-on-primary-container shadow-sm' : 'bg-surface-container-lowest border-outline-variant/60 text-on-surface-variant hover:bg-surface-container'}`}>
+                  <input type="radio" name="deliveryMethod" value="delivery" checked={deliveryMethod === 'delivery'} onChange={() => setDeliveryMethod('delivery')} className="hidden" />
+                  <span className="material-symbols-outlined text-[20px]">local_shipping</span>
+                  <span className="font-label-md text-sm">Delivery</span>
+                </label>
+                <label className={`flex-1 flex items-center justify-center gap-2 py-3 px-2 rounded-xl border cursor-pointer transition-all ${deliveryMethod === 'pickup' ? 'bg-primary-container border-primary text-on-primary-container shadow-sm' : 'bg-surface-container-lowest border-outline-variant/60 text-on-surface-variant hover:bg-surface-container'}`}>
+                  <input type="radio" name="deliveryMethod" value="pickup" checked={deliveryMethod === 'pickup'} onChange={() => setDeliveryMethod('pickup')} className="hidden" />
+                  <span className="material-symbols-outlined text-[20px]">storefront</span>
+                  <span className="font-label-md text-sm">Retiro local</span>
+                </label>
+              </div>
+
               <div>
                 <label className="block text-xs font-label-md text-on-surface-variant mb-1">Tu Nombre</label>
                 <input
@@ -128,16 +150,29 @@ export default function CheckoutModal({
               </div>
 
               <div>
-                <label className="block text-xs font-label-md text-on-surface-variant mb-1">Aclaración / Para llevar o comer acá</label>
+                <label className="block text-xs font-label-md text-on-surface-variant mb-1">Detalles del pedido (Opcional)</label>
                 <textarea
-                  required
                   rows={2}
-                  value={locationDetails}
-                  onChange={(e) => setLocationDetails(e.target.value)}
+                  value={orderDetails}
+                  onChange={(e) => setOrderDetails(e.target.value)}
                   className="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
-                  placeholder="Ej. Para comer acá / Sin tomate"
+                  placeholder="Ej. Sin tomate / Mayonesa aparte"
                 ></textarea>
               </div>
+
+              {deliveryMethod === 'delivery' && (
+                <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                  <label className="block text-xs font-label-md text-on-surface-variant mb-1">Detalles donde enviarlo <span className="text-primary">*</span></label>
+                  <textarea
+                    required
+                    rows={2}
+                    value={deliveryAddress}
+                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                    className="w-full bg-surface-container-lowest border border-outline-variant/60 rounded-xl px-3.5 py-2.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-none"
+                    placeholder="Ej. Calle Falsa 123, Casa con rejas negras"
+                  ></textarea>
+                </div>
+              )}
             </div>
 
             <button

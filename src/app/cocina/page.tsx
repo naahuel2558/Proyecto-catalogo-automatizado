@@ -19,7 +19,7 @@ export default function KitchenReceiptsPage() {
           customerName: 'Juan Pérez',
           customerPhone: '+54 9 358 1234567',
           address: 'Calle Falsa 123 (esq. San Martín)',
-          deliveryNotes: 'Calle Falsa 123 (esq. San Martín)',
+          deliveryNotes: 'Sin tomate en el lomo',
           isPickup: false,
           items: [
             { product: { id: '1', name: 'Lomo Entre Panes Especial', description: '', price: 9500, category: 'lomos', available: true }, quantity: 1 },
@@ -172,10 +172,28 @@ export default function KitchenReceiptsPage() {
                       <span className="text-on-surface-variant font-normal">Celular:</span>{' '}
                       <span className="text-primary font-bold">{order.customerPhone}</span>
                     </p>
-                    <p className="text-on-surface font-semibold">
-                      <span className="text-on-surface-variant font-normal">Dirección / Aclaración:</span>{' '}
-                      {order.address}
-                    </p>
+                    <div className="flex flex-col gap-1.5 mt-2 p-2.5 bg-surface-container-lowest border border-outline-variant/30 rounded-lg">
+                      <p className="text-on-surface font-semibold flex items-center gap-1.5">
+                        <span className="text-on-surface-variant font-normal">Tipo:</span>{' '}
+                        {order.isPickup ? (
+                          <span className="text-amber-600 font-bold bg-amber-500/10 px-2 py-0.5 rounded-md flex items-center gap-1 text-[11px] uppercase tracking-wide"><span className="material-symbols-outlined text-[14px]">storefront</span> Retira local</span>
+                        ) : (
+                          <span className="text-blue-600 font-bold bg-blue-500/10 px-2 py-0.5 rounded-md flex items-center gap-1 text-[11px] uppercase tracking-wide"><span className="material-symbols-outlined text-[14px]">local_shipping</span> Delivery</span>
+                        )}
+                      </p>
+                      {!order.isPickup && (
+                        <p className="text-on-surface font-semibold">
+                          <span className="text-on-surface-variant font-normal">Dirección:</span>{' '}
+                          {order.address}
+                        </p>
+                      )}
+                      {order.deliveryNotes && (
+                        <p className="text-on-surface font-semibold">
+                          <span className="text-on-surface-variant font-normal">Detalles / Aclaración:</span>{' '}
+                          <span className="text-amber-600 dark:text-amber-400">{order.deliveryNotes}</span>
+                        </p>
+                      )}
+                    </div>
                   </div>
 
                   <div className="space-y-1.5 pt-1">

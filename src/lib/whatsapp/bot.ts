@@ -30,11 +30,23 @@ Estamos a tu disposición!
 
 👉🏻 ALIAS: *entrepanes.mp*
 🧒🏻 Titular: *ENTRE PANES S.A.S.*
-📞 Teléfono: *+54 9 3582 435386*
+📞 Teléfono: *+54 9 3585 762463*
 
 *LAS PROMOS SON SOLAMENTE EN EFECTIVO*`;
 
-let activeSocket: ReturnType<typeof makeWASocket> | null = null;
+// Prevención de múltiples instancias en el entorno de desarrollo de Next.js (Fast Refresh)
+const globalForBot = global as unknown as { 
+  activeSocket: ReturnType<typeof makeWASocket> | null;
+  messageCooldowns: Map<string, number> | null;
+};
+
+let activeSocket: ReturnType<typeof makeWASocket> | null = globalForBot.activeSocket || null;
+
+// Mapa para guardar el tiempo del último saludo enviado a cada usuario
+const messageCooldowns = globalForBot.messageCooldowns || new Map<string, number>();
+if (!globalForBot.messageCooldowns) globalForBot.messageCooldowns = messageCooldowns;
+
+const COOLDOWN_TIME_MS = 60 * 60 * 1000; // 1 hora en milisegundos
 
 export async function connectToWhatsApp() {
   if (activeSocket) return activeSocket;
@@ -58,6 +70,7 @@ export async function connectToWhatsApp() {
   });
 
   activeSocket = sock;
+  globalForBot.activeSocket = sock;
 
   sock.ev.on('creds.update', saveCreds);
 
@@ -78,7 +91,7 @@ export async function connectToWhatsApp() {
         connectToWhatsApp();
       }
     } else if (connection === 'open') {
-      console.log('✅ Bot de WhatsApp conectado exitosamente con el número de ENTRE PANES (+54 9 3582 435386)!');
+      console.log('✅ Bot de WhatsApp conectado exitosamente con el número de ENTRE PANES (+54 9 3585 762463)!');
     }
   });
 
@@ -97,8 +110,17 @@ export async function connectToWhatsApp() {
 
       console.log(`💬 Mensaje recibido de ${remoteJid}: "${messageText}"`);
 
+      const now = Date.now();
+      const lastSentTime = messageCooldowns.get(remoteJid) || 0;
+
+      if (now - lastSentTime < COOLDOWN_TIME_MS) {
+        console.log(`⏳ Saludo automático omitido para ${remoteJid} (en período de enfriamiento)`);
+        return;
+      }
+
       // Responder con el saludo automático que incluye el link al catálogo web de Vercel
       await sock.sendMessage(remoteJid, { text: GREETING_MESSAGE });
+      messageCooldowns.set(remoteJid, now);
       console.log(`🤖 Saludo automático y enlace enviado a ${remoteJid}`);
     } catch (err) {
       console.error('Error procesando mensaje entrante de WhatsApp:', err);
@@ -120,8 +142,16 @@ export async function sendWhatsAppMessage(toPhone: string, text: string): Promis
     }
     const formattedJid = `${jid}@s.whatsapp.net`;
 
+    let isNewConnection = false;
     if (!activeSocket) {
       await connectToWhatsApp();
+      isNewConnection = true;
+    }
+
+    // Si acabamos de arrancar el socket, le damos 4 segundos para que se conecte correctamente a los servidores de Meta
+    if (isNewConnection) {
+      console.log('⏳ Esperando a que la conexión de WhatsApp se estabilice antes de enviar el recibo...');
+      await new Promise(resolve => setTimeout(resolve, 4000));
     }
 
     // Verificar que la sesión de WhatsApp esté conectada y lista (con usuario activo)
@@ -131,7 +161,7 @@ export async function sendWhatsAppMessage(toPhone: string, text: string): Promis
       console.log(`📲 Recibo enviado automáticamente al usuario en WhatsApp: ${formattedJid}`);
 
       // Enviar copia del recibo al número oficial de la rotisería (si es un número distinto)
-      const officialJid = '5493582435386@s.whatsapp.net';
+      const officialJid = '5493585762463@s.whatsapp.net';
       if (formattedJid !== officialJid) {
         await activeSocket.sendMessage(officialJid, { text: `[NUEVO PEDIDO RECIBIDO]\n\n${text}` });
         console.log(`📲 Copia del recibo enviada a la rotisería: ${officialJid}`);
@@ -148,7 +178,4 @@ export async function sendWhatsAppMessage(toPhone: string, text: string): Promis
   return false;
 }
 
-// Permitir ejecución directa desde la consola
-if (require.main === module) {
-  connectToWhatsApp().catch((err) => console.error('Error al iniciar WhatsApp Bot:', err));
-}
+// Fin del archivo bot.ts

@@ -7,7 +7,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Bife de lomo tierno, lechuga, tomate, jamón, queso, huevo frito y mayonesa de la casa en pan artesanal.',
     price: 9500,
     category: 'lomos',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuASNzYlGAz8RbsojMCdexSszDcKcach15CYK2Z3FgU1s3bRc-TtE2JWCxtWfmmBl5zTFWkoAen2kYVooDa5FSsdwZr3QH0-nPwVxJxpATwgwQcVCxVJ57u4oYZCvfbp8VcB8NGA6QHMTwa51okbFsW9siAhXJ9IbzbRnHWJUbe-zZjmU79HS2XVpZJ8bVsO2-GYze8NMkg0XeF-SEzreqHkCXyVki0KFSTOKAcLayj8AdQB5H0eb5qz',
+    image: '/imgs/lomo-entre-panes.jpeg',
     available: true,
   },
   {
@@ -17,7 +17,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     price: 11000,
     category: 'lomos',
     badge: 'Recomendado',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC9M9YjC76Jfn-FUkzhpDwiepdfthj7FQndZdYS0t3cuboFKYTJmw8yvd8yUuKR_DY3MxG2zDj8yFJH5eVhku1ixWhSmORPZXNMYcvIFO_dXXX0vHK9tet4UN6t1_li_Vdtd_JZWrPr1SUQSg0OnPp4ordteFbw-LZUNnn58kn6I8QFtQoJacf6yk7VxCBkflXlDj-fr__vOiL4PTgSYTmd2N2gKjtqdV0O2QGoeW5Vg9lDAJYm7HIG',
+    image: '/imgs/lomo-cheddar.jpeg',
     available: true,
   },
   {
@@ -26,7 +26,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Milanesa tierna de carne o pollo, lechuga, tomate, huevo, jamón, queso y aderezo especial.',
     price: 9000,
     category: 'milanesas',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAtYP-B8jTDEHz4x86IpwwDbsdnm7yNE-dsnsvbZv-2tiUXe2eOBgpFWFnZGYEEpF9_kyhwXTJ0mnSCkHDziZYtI4BgP_l9eRajPw-qEAp70zpmhlJsEjymkhwsOldhx7vK0IvRRwcHNS83wtdXFsB-vsiOjqfWfCkdSnHctiu-sNaNpdATFNHmbOSePfw42l6zDxWvan4DyWNWuz_k3ENoNCN4fJJN_120VWLgFglykWaeqL3Oluuf',
+    image: '/imgs/milanesa-completa.jpeg',
     available: true,
   },
   {
@@ -35,7 +35,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: '2 Sándwiches de milanesa completos acompañados de papas fritas crujientes.',
     price: 16500,
     category: 'combos',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCEB8zopHOGcFJyE2V1q2M6WNeoHITLWbBJ2QF2itQlvIZiYKeGhmYQa0rDejydbI9G2l89eVdHEtUon2M6uZ2HCK2z_rN6Vmcg2F3Hs7S0S9YvHBOoFCLtBQsSxwojyd2ID5jIfwQrxldGUmXtXQtFyb-tU85wq-3P8ufeR9M5RRa1gRkQWRXy507XzfNNfLV9YH03rY-XMx6VCqvKrthzxEw25YKDLWr--aBQh7ICWmxo9gFdvo6s',
+    image: '/imgs/bbq-sandwich.jpeg',
     available: true,
   },
   {
@@ -44,7 +44,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: '2 Lomos completos con papas fritas bastón.',
     price: 20500,
     category: 'combos',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAxjxQX2YWnb3u_e2o_dIPFtJY8dJdensFSQTJc46EYs_aGYaive1xUGg99l4Sh_Z8Ol5tNDfg5tn1lhW_gDWT6RRnC5egd43Rm5_C63nvlqrJLF8BI0Nw3rN3fWPwQsWR4xU3mbVR-zDE5Tb_RDZWbAD74iA9ze9VcfkCv29pwmCgfDMBdzcqJb_5YTqwwruhWtUHWUNGNcvYnXOiqrFYfJh_VoQlj_h_YtTB38qp3IFEfW2ehH3kJ',
+    image: '/imgs/burger-papas.jpeg',
     available: true,
   },
   {
@@ -53,7 +53,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     description: 'Doble medalla de carne smash 120g, queso cheddar, panceta ahumada y salsa secreta Entre Panes.',
     price: 8800,
     category: 'hamburguesas',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBvYVB_F-sAJEgHaUcm0Uy94t2Sj5TTWnottcK5aMthZqRTgAcjGmbzUaseDlJ6eEgTQgyj6HL2p6o5AgufU5_EJeE34c3jy94msFjvI_QHRghbWAxailyqun81iEUeSCynJnG6wcFV-0fAfBjBp8j4pxFnWE1vnNgvCRM35G02JKtXNjBUxD9J-G4SO4weBAe4HyisASpeiL8qUmFR7p_XFuYmjnORUdqMplgO5qbrTzBYXZ52n9u6',
+    image: '/imgs/burger-doble.jpeg',
     available: true,
   },
   {

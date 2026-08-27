@@ -46,7 +46,7 @@ let activeSocket: ReturnType<typeof makeWASocket> | null = globalForBot.activeSo
 const messageCooldowns = globalForBot.messageCooldowns || new Map<string, number>();
 if (!globalForBot.messageCooldowns) globalForBot.messageCooldowns = messageCooldowns;
 
-const COOLDOWN_TIME_MS = 60 * 60 * 1000; // 1 hora en milisegundos
+const COOLDOWN_TIME_MS = 45 * 60 * 1000; // 45 minutos en milisegundos
 
 export async function connectToWhatsApp() {
   if (activeSocket) return activeSocket;

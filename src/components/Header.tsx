@@ -8,30 +8,47 @@ interface HeaderProps {
 
 export default function Header({ cartItemCount, onOpenCheckout }: HeaderProps) {
   return (
-    <header className="bg-surface/80 dark:bg-surface-dim/80 backdrop-blur-lg top-0 border-b border-outline-variant/30 shadow-sm flex justify-between items-center w-full px-5 md:px-16 py-4 sticky z-50 transition-all duration-300">
-      <Link href="/" className="flex items-center gap-2 group cursor-pointer">
-        <span className="material-symbols-outlined text-primary text-3xl filled-icon group-hover:scale-110 transition-transform duration-300">
-          lunch_dining
-        </span>
-        <h1 className="font-display-lg text-2xl md:text-3xl font-black bg-gradient-to-r from-primary to-primary-container bg-clip-text text-transparent uppercase tracking-wider group-hover:tracking-widest transition-all duration-300">
-          Entre Panes
-        </h1>
-      </Link>
+    <>
+      {/* TopNavBar (Hidden on Mobile, Visible on Desktop) */}
+      <header className="hidden md:flex justify-between items-center w-full px-margin-desktop py-6 absolute top-0 z-50 bg-transparent text-white transition-all duration-300">
+        <div className="flex items-center gap-4">
+          <Link href="/" className="flex items-center gap-4 cursor-pointer">
+            <h1 className="font-display-lg text-white uppercase tracking-wider drop-shadow-md">Entre Panes</h1>
+            <span className="font-body-md text-white/80 ml-2 drop-shadow-md">Rotisería & Sándwiches</span>
+          </Link>
+        </div>
+        <nav className="flex items-center">
+          <button 
+            onClick={onOpenCheckout}
+            className="ml-4 p-3 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white transition-colors flex items-center justify-center relative cursor-pointer"
+          >
+            <span className="material-symbols-outlined">shopping_cart</span>
+            {cartItemCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow-sm">
+                {cartItemCount}
+              </span>
+            )}
+          </button>
+        </nav>
+      </header>
 
-      <div className="flex items-center gap-3">
-        <button
+      {/* Mobile Top AppBar */}
+      <header className="md:hidden flex justify-between items-center w-full px-margin-mobile py-4 absolute top-0 z-50 bg-transparent text-white">
+        <Link href="/">
+          <h1 className="font-display-lg-mobile text-white uppercase tracking-wider drop-shadow-md">Entre Panes</h1>
+        </Link>
+        <button 
           onClick={onOpenCheckout}
-          className="relative p-2 text-on-surface-variant hover:text-primary-container transition-colors duration-200 cursor-pointer"
-          title="Carrito de Compras"
+          className="p-2 rounded-full bg-black/20 backdrop-blur-sm text-white hover:bg-black/30 transition-colors relative cursor-pointer"
         >
-          <span className="material-symbols-outlined text-2xl">shopping_cart</span>
+          <span className="material-symbols-outlined">shopping_cart</span>
           {cartItemCount > 0 && (
-            <span className="absolute top-0 right-0 bg-primary-container text-on-primary font-label-sm text-[10px] w-4 h-4 rounded-full flex items-center justify-center animate-pulse font-bold">
+            <span className="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
               {cartItemCount}
             </span>
           )}
         </button>
-      </div>
-    </header>
+      </header>
+    </>
   );
 }

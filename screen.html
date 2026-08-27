@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Entre Panes - Menú de Pedidos</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Montserrat:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "error-container": "#ffdad6",
+                "tertiary-fixed-dim": "#85cfff",
+                "inverse-on-surface": "#f1effa",
+                "tertiary-container": "#00b5fc",
+                "on-primary-fixed": "#2f1500",
+                "on-primary-container": "#ffffff",
+                "on-secondary-container": "#636262",
+                "on-surface-variant": "#564334",
+                "secondary-container": "#e2dfde",
+                "surface": "#ffffff",
+                "surface-container": "#f8f9fa",
+                "outline-variant": "#e0e0e0",
+                "tertiary": "#00658f",
+                "secondary": "#5f5e5e",
+                "on-surface": "#1a1b22",
+                "outline": "#897362",
+                "on-secondary-fixed": "#1c1b1b",
+                "on-error-container": "#93000a",
+                "surface-container-highest": "#f8f9fa",
+                "background": "#ffffff",
+                "secondary-fixed": "#e5e2e1",
+                "on-tertiary-fixed-variant": "#004c6c",
+                "inverse-surface": "#2f3038",
+                "secondary-fixed-dim": "#c8c6c5",
+                "on-primary": "#ffffff",
+                "on-primary-fixed-variant": "#6e3900",
+                "inverse-primary": "#ffb77d",
+                "surface-dim": "#ffffff",
+                "surface-variant": "#f4f4f5",
+                "on-background": "#1a1b22",
+                "primary-fixed-dim": "#ffb77d",
+                "on-tertiary-fixed": "#001e2e",
+                "primary-fixed": "#ffdcc3",
+                "on-secondary-fixed-variant": "#474746",
+                "surface-bright": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "on-tertiary-container": "#004360",
+                "surface-container-high": "#ffffff",
+                "surface-container-lowest": "#ffffff",
+                "primary": "#ff6b00",
+                "surface-tint": "#ff6b00",
+                "surface-container-low": "#ffffff",
+                "on-secondary": "#ffffff",
+                "on-error": "#ffffff",
+                "primary-container": "#ff6b00",
+                "error": "#ba1a1a",
+                "tertiary-fixed": "#c7e7ff"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.5rem",
+                "lg": "1rem",
+                "xl": "1.5rem",
+                "2xl": "2rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "24px",
+                "container-max": "1280px",
+                "gutter": "32px",
+                "base": "8px",
+                "margin-desktop": "80px"
+        },
+        "fontFamily": {
+                "label-sm": [
+                        "Inter"
+                ],
+                "display-lg-mobile": [
+                        "Montserrat"
+                ],
+                "headline-sm": [
+                        "Montserrat"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Montserrat"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "display-lg": [
+                        "Montserrat"
+                ],
+                "display-xl": [
+                        "Montserrat"
+                ]
+        },
+        "fontSize": {
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "36px",
+                        {
+                                "lineHeight": "42px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-sm": [
+                        "20px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "letterSpacing": "0.01em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "28px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "display-xl": [
+                        "64px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.03em",
+                                "fontWeight": "800"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col relative pb-16 md:pb-0 selection:bg-primary/20 selection:text-primary">
+<!-- TopNavBar (Hidden on Mobile, Visible on Desktop) -->
+<header class="hidden md:flex justify-between items-center w-full px-margin-desktop py-6 absolute top-0 z-50 bg-transparent text-white transition-all duration-300">
+<div class="flex items-center gap-4">
+<h1 class="font-display-lg text-white uppercase tracking-wider drop-shadow-md">Entre Panes</h1>
+<span class="font-body-md text-white/80 ml-2 drop-shadow-md">Rotisería &amp; Sándwiches</span>
+</div>
+<nav class="flex gap-8 items-center">
+<a class="text-white font-bold hover:text-primary-container transition-colors duration-200 drop-shadow-md" href="#">Menu</a>
+<a class="text-white/90 font-medium hover:text-white transition-colors duration-200 drop-shadow-md" href="#">Orders</a>
+<a class="text-white/90 font-medium hover:text-white transition-colors duration-200 drop-shadow-md" href="#">Offers</a>
+<a class="text-white/90 font-medium hover:text-white transition-colors duration-200 drop-shadow-md" href="#">Profile</a>
+<button class="ml-4 p-3 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white transition-colors flex items-center justify-center relative">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold shadow-sm">2</span>
+</button>
+</nav>
+</header>
+<!-- Mobile Top AppBar -->
+<header class="md:hidden flex justify-between items-center w-full px-margin-mobile py-4 absolute top-0 z-50 bg-transparent text-white">
+<h1 class="font-display-lg-mobile text-white uppercase tracking-wider drop-shadow-md">Entre Panes</h1>
+<button class="p-2 rounded-full bg-black/20 backdrop-blur-sm text-white hover:bg-black/30 transition-colors relative">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+<span class="absolute -top-1 -right-1 bg-primary text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">2</span>
+</button>
+</header>
+<!-- Full Width Hero Section -->
+<section class="w-full relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center z-0 scale-105" data-alt="A vibrant, high-quality, close-up photograph of a delicious gourmet sandwich or burger in a modern food photography style. The scene is brightly lit with natural light, emphasizing fresh ingredients like crispy lettuce, melted cheese, and perfectly toasted artisanal bread. The background is slightly blurred (bokeh) with warm, appetizing colors, reinforcing a premium, mouth-watering culinary experience in a light-mode setting." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhR8XGXHgtYREhxx7sDEE7PmQnhxmD4NlyWnPlgciGkzYfVAXmxm2nJWwfo0V0ZRKmfKoW4TGd_CaMGVpXAmDib-xbaDgTWBV8k7Sjq_jpm9hco0Ic_cUcXhZd7PekQ5rnXBdTGXTewQwv79v_z53DHFQEhCeHAPZhIusfPYzKE9Fl-Bsg54H5N2H-x-3AdeQNpbSC3R6pSxILUW_ep_cHVWt2NrYHl9CFAmNwyaa4iHwWWsJTpqiO')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/60 z-10"></div>
+<div class="relative z-20 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col items-center text-center gap-8 mt-16">
+<h2 class="font-[Montserrat] font-extrabold text-5xl md:text-7xl text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] tracking-tight leading-tight">Sabor que Desborda</h2>
+<p class="font-body-lg text-white/90 max-w-2xl text-lg md:text-xl drop-shadow-md">Disfrutá de los mejores sándwiches y hamburguesas artesanales de la ciudad. Ingredientes frescos, porciones generosas y un sabor inigualable.</p>
+<button class="bg-primary text-white font-headline-sm py-4 px-10 rounded-full w-max hover:bg-[#e66000] hover:shadow-[0_8px_24px_rgba(255,107,0,0.4)] hover:-translate-y-1 transition-all duration-300 mt-4 tracking-wide">Ver Promos</button>
+</div>
+</section>
+<main class="flex-grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 flex flex-col gap-16 -mt-8 relative z-30">
+<!-- Category Filters -->
+<section class="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x items-center justify-center md:justify-start">
+<button class="snap-start shrink-0 px-8 py-4 rounded-full bg-primary text-white font-headline-sm shadow-md transition-all hover:scale-105">Sándwiches</button>
+<button class="snap-start shrink-0 px-8 py-4 rounded-full bg-surface-container text-on-surface font-headline-sm hover:bg-surface-variant hover:text-primary transition-all shadow-sm">Burgers</button>
+<button class="snap-start shrink-0 px-8 py-4 rounded-full bg-surface-container text-on-surface font-headline-sm hover:bg-surface-variant hover:text-primary transition-all shadow-sm">Papas Fritas</button>
+<button class="snap-start shrink-0 px-8 py-4 rounded-full bg-surface-container text-on-surface font-headline-sm hover:bg-surface-variant hover:text-primary transition-all shadow-sm">Bebidas</button>
+</section>
+<!-- Product Catalog (Modern Grid/List) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Item 1 -->
+<div class="bg-surface rounded-2xl overflow-hidden shadow-[0px_8px_30px_rgba(0,0,0,0.06)] border border-outline-variant/20 flex flex-col hover:shadow-[0px_12px_40px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 group">
+<div class="h-48 w-full bg-gray-200 relative overflow-hidden">
+<img alt="Lomo Entre Panes Especial" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDstmYaT0wUOc9jCugSXPv0X1ZgUQscZTDyb6M43os2tIYDtG1Ezxi-GBR9zpI2IbrFNCK5iyWC7H39NR8ur2gusoXJdWLuP0ONrye8wINAP2CFZ8xOtovw2_VCaEgvc0KBa9MjcYFZZxoDGUauzV07M-C_cgt3Bc1fDsSI1NuleakY_OQg6aCXaqfTKYYFZm2mWwR8fS2dmWXlICdjgEy-HXfUIlgLItVE0Kx_LeWttA3KFsva6L9N"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+</div>
+<div class="p-6 md:p-8 flex-grow flex flex-col gap-4">
+<div class="flex-grow flex flex-col gap-2">
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Lomo Entre Panes Especial</h3>
+<p class="font-body-md text-on-surface-variant/80">Bife de lomo tierno, lechuga, tomate, jamón, queso, huevo frito y mayonesa de la casa en pan artesanal.</p>
+</div>
+<div class="flex items-center justify-between mt-4 pt-4 border-t border-outline-variant/20">
+<span class="font-headline-md text-primary font-bold">$9.500</span>
+<div class="flex items-center gap-3 bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button aria-label="Decrease quantity" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-white hover:shadow-sm transition-all">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="font-headline-sm text-on-surface w-4 text-center">0</span>
+<button aria-label="Increase quantity" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-[#e66000] shadow-sm transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="bg-surface rounded-2xl overflow-hidden shadow-[0px_8px_30px_rgba(0,0,0,0.06)] border border-outline-variant/20 flex flex-col hover:shadow-[0px_12px_40px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 group">
+<div class="h-48 w-full bg-gray-200 relative overflow-hidden">
+<img alt="Lomo Cheddar &amp; Panceta" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXuVoLCism2kVN7lNVy-x0tUrIWgd-wzKgiuHeB6ZB_hleCw2ua2004rimPOF0Y4HISiRy7rZCbZuftcaec0slWunB9ZABt0HAkl6N-yEzao3S2ch1VzEuJ0x3719SH5MCvmh2fklMubqR4ewPRLkhdchU6hqnsE4hdb7-J6hzEfvzerFi6UXs-mgpohBCoyKKwE0wysTolQUBCyI4QqoutdBNfJ1wNir9KiyvV8rlzW4FxwfBi-DP"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+</div>
+<div class="p-6 md:p-8 flex-grow flex flex-col gap-4">
+<div class="flex-grow flex flex-col gap-2">
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Lomo Cheddar &amp; Panceta</h3>
+<p class="font-body-md text-on-surface-variant/80">Bife de lomo premium, panceta crocante, doble queso cheddar fundido y cebolla caramelizada.</p>
+</div>
+<div class="flex items-center justify-between mt-4 pt-4 border-t border-outline-variant/20">
+<span class="font-headline-md text-primary font-bold">$11.000</span>
+<div class="flex items-center gap-3 bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button aria-label="Decrease quantity" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-white hover:shadow-sm transition-all">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="font-headline-sm text-on-surface w-4 text-center">0</span>
+<button aria-label="Increase quantity" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-[#e66000] shadow-sm transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3 (Promo) -->
+<div class="bg-surface rounded-2xl overflow-hidden shadow-[0px_8px_30px_rgba(255,107,0,0.15)] border-2 border-primary/40 flex flex-col hover:shadow-[0px_12px_40px_rgba(255,107,0,0.25)] hover:-translate-y-1 transition-all duration-300 group relative">
+<div class="absolute top-4 left-4 z-20 bg-primary text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-md">Promo</div>
+<div class="h-48 w-full bg-primary/10 relative overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-6xl text-primary/40 group-hover:scale-110 transition-transform duration-500" data-icon="local_offer">local_offer</span>
+<div class="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+</div>
+<div class="p-6 md:p-8 flex-grow flex flex-col gap-4 relative">
+<div class="flex-grow flex flex-col gap-2">
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">2 Sándwiches de Mila + Papas</h3>
+<p class="font-body-md text-on-surface-variant/80 flex items-start gap-2">
+<span class="material-symbols-outlined text-primary text-sm mt-1 shrink-0" data-icon="info">info</span>
+                        PROMO EFECTIVO: 2 Sándwiches de milanesa completos acompañados de papas fritas crujientes.
+                    </p>
+</div>
+<div class="flex items-center justify-between mt-4 pt-4 border-t border-primary/20">
+<span class="font-headline-md text-primary font-bold">$16.500</span>
+<div class="flex items-center gap-3 bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button aria-label="Decrease quantity" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-white hover:shadow-sm transition-all">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="font-headline-sm text-on-surface w-4 text-center">0</span>
+<button aria-label="Increase quantity" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-[#e66000] shadow-sm transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 4 -->
+<div class="bg-surface rounded-2xl overflow-hidden shadow-[0px_8px_30px_rgba(0,0,0,0.06)] border border-outline-variant/20 flex flex-col hover:shadow-[0px_12px_40px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 group">
+<div class="h-48 w-full bg-gray-200 relative overflow-hidden">
+<img alt="Burger Entre Panes Doble" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF-mMpDjmYjqUKxOiTlOMQSZ6zvnl5H9rAOgKrbLlxXAZkfhOPnUn1C3fHJd3bQ4MwsDlGRkk1rOmRPfpOC0Vk7AXgqKwXzngrGheCa6TvI92osXPVB773BmPzzNy--Vyg0BjSL-zK8BQRMRfFJyNINzsVBI_Qsgm9IcZD4dZZL-LipaLnx3VlIbutySwEbo-rytNjcJyofyvD4mqqAQ4ihp4W2dm86yqq2z0vPOmx1wa9ZGY64Bwy"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+</div>
+<div class="p-6 md:p-8 flex-grow flex flex-col gap-4">
+<div class="flex-grow flex flex-col gap-2">
+<h3 class="font-headline-md text-on-surface group-hover:text-primary transition-colors">Burger Entre Panes Doble</h3>
+<p class="font-body-md text-on-surface-variant/80">Doble medalla de carne smash 120g, queso cheddar, panceta ahumada y salsa secreta Entre Panes.</p>
+</div>
+<div class="flex items-center justify-between mt-4 pt-4 border-t border-outline-variant/20">
+<span class="font-headline-md text-primary font-bold">$8.800</span>
+<div class="flex items-center gap-3 bg-surface-container rounded-full p-1 border border-outline-variant/30">
+<button aria-label="Decrease quantity" class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-white hover:shadow-sm transition-all">
+<span class="material-symbols-outlined" data-icon="remove">remove</span>
+</button>
+<span class="font-headline-sm text-on-surface w-4 text-center">0</span>
+<button aria-label="Increase quantity" class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-[#e66000] shadow-sm transition-colors">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Visible on Mobile, Hidden on Desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-20 bg-surface shadow-[0_-4px_20px_rgba(0,0,0,0.05)] border-t border-outline-variant/10">
+<a class="flex flex-col items-center justify-center text-primary font-bold w-16 h-16 transition-all" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="lunch_dining" data-weight="fill" style="font-variation-settings: 'FILL' 1;">lunch_dining</span>
+<span class="font-label-sm">Menu</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary w-16 h-16 transition-all" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="receipt_long">receipt_long</span>
+<span class="font-label-sm">Orders</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary w-16 h-16 transition-all" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="local_offer">local_offer</span>
+<span class="font-label-sm">Offers</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant/70 hover:text-primary w-16 h-16 transition-all" href="#">
+<span class="material-symbols-outlined text-2xl mb-1" data-icon="person">person</span>
+<span class="font-label-sm">Profile</span>
+</a>
+</nav>
+<!-- Footer -->
+<footer class="w-full py-12 px-margin-mobile flex flex-col items-center gap-6 bg-surface-container border-t border-outline-variant/20 mt-12 pb-28 md:pb-12">
+<h2 class="font-display-lg text-primary uppercase tracking-wider">Entre Panes</h2>
+<div class="flex gap-8 font-label-md">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Terms</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">Location</a>
+</div>
+<p class="font-label-md text-on-surface-variant/60 mt-4">© 2024 Entre Panes. Crafted for quality.</p>
+</footer>
+</body></html>

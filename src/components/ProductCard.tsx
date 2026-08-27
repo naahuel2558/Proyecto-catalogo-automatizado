@@ -10,15 +10,21 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, quantity, onIncrease, onDecrease }: ProductCardProps) {
+  const isPromo = product.badge === 'Recomendado' || product.badge === 'Promo';
+
   return (
-    <article className={`bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col group transition-all duration-300 border ${
-      quantity > 0 
-        ? 'border-2 border-primary ring-2 ring-primary/20 shadow-[0_10px_30px_rgba(144,77,0,0.15)] transform scale-[1.02]' 
-        : 'border-outline-variant/30 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)]'
+    <div className={`bg-surface rounded-2xl overflow-hidden shadow-[0px_8px_30px_rgba(0,0,0,0.06)] flex flex-col hover:-translate-y-1 transition-all duration-300 group relative ${
+      isPromo 
+        ? 'border-2 border-primary/40 hover:shadow-[0px_12px_40px_rgba(255,107,0,0.25)] shadow-[0px_8px_30px_rgba(255,107,0,0.15)]'
+        : 'border border-outline-variant/20 hover:shadow-[0px_12px_40px_rgba(0,0,0,0.1)]'
     }`}>
-      
-      {/* Image & Badges */}
-      <div className="h-48 w-full bg-surface-variant relative overflow-hidden">
+      {product.badge && (
+        <div className="absolute top-4 left-4 z-20 bg-primary text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-md">
+          {product.badge}
+        </div>
+      )}
+
+      <div className="h-48 w-full bg-gray-200 relative overflow-hidden flex items-center justify-center">
         {product.image ? (
           <Image
             src={product.image}
@@ -28,67 +34,52 @@ export default function ProductCard({ product, quantity, onIncrease, onDecrease 
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center bg-primary-fixed text-primary font-bold text-4xl">
-            🥪
-          </div>
+          <>
+            <span className="material-symbols-outlined text-6xl text-primary/40 group-hover:scale-110 transition-transform duration-500">
+              local_offer
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+          </>
         )}
-
-        {product.badge && (
-          <div className={`absolute top-4 left-4 px-3 py-1 rounded-full shadow-sm border ${
-            product.badge === 'Recomendado'
-              ? 'bg-surface text-primary-container border-outline-variant/20'
-              : 'bg-primary-container text-on-primary border-primary-container'
-          }`}>
-            <span className="font-label-sm text-label-sm">{product.badge}</span>
-          </div>
-        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10 pointer-events-none"></div>
       </div>
 
-      {/* Content */}
-      <div className="p-6 flex flex-col grow">
-        <div className="flex justify-between items-start mb-2 gap-2">
-          <h3 className="font-headline-sm text-headline-sm text-on-surface pr-4 leading-snug">
-            {product.name}
-          </h3>
-          <span className="font-headline-sm text-headline-sm text-primary-container whitespace-nowrap">
+      <div className="p-6 md:p-8 flex-grow flex flex-col gap-4 relative">
+        <div className="flex-grow flex flex-col gap-2">
+          <h3 className="font-headline-md text-on-surface group-hover:text-primary transition-colors">{product.name}</h3>
+          <p className="font-body-md text-on-surface-variant/80 flex items-start gap-2">
+            {isPromo && (
+              <span className="material-symbols-outlined text-primary text-sm mt-1 shrink-0">info</span>
+            )}
+            {product.description}
+          </p>
+        </div>
+
+        <div className={`flex items-center justify-between mt-4 pt-4 border-t ${isPromo ? 'border-primary/20' : 'border-outline-variant/20'}`}>
+          <span className="font-headline-md text-primary font-bold">
             ${product.price.toLocaleString('es-AR')}
           </span>
-        </div>
-
-        <p className="font-body-md text-body-md text-on-surface-variant mb-6 grow leading-relaxed">
-          {product.description}
-        </p>
-
-        {/* Quantity Control (- 0 +) */}
-        <div className={`flex items-center justify-between border rounded-lg p-1 transition-colors ${
-          quantity > 0 ? 'border-primary/50 bg-surface' : 'border-outline-variant/50 bg-surface'
-        }`}>
-          <button
-            aria-label="Disminuir cantidad"
-            onClick={() => onDecrease(product.id)}
-            disabled={quantity === 0}
-            className={`w-10 h-10 flex items-center justify-center rounded-md transition-colors ${
-              quantity > 0
-                ? 'text-on-surface-variant hover:bg-surface-variant cursor-pointer'
-                : 'text-outline/40 cursor-not-allowed'
-            }`}
-          >
-            <span className="material-symbols-outlined">remove</span>
-          </button>
-
-          <span className={`w-8 text-center font-label-md text-label-md ${quantity > 0 ? 'text-primary' : 'text-on-surface'}`}>
-            {quantity}
-          </span>
-
-          <button
-            aria-label="Aumentar cantidad"
-            onClick={() => onIncrease(product.id)}
-            className="w-10 h-10 flex items-center justify-center bg-primary-container text-on-primary rounded-md hover:bg-primary transition-colors shadow-sm cursor-pointer"
-          >
-            <span className="material-symbols-outlined">add</span>
-          </button>
+          <div className="flex items-center gap-3 bg-surface-container rounded-full p-1 border border-outline-variant/30">
+            <button 
+              aria-label="Decrease quantity" 
+              onClick={() => onDecrease(product.id)}
+              className="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-white hover:shadow-sm transition-all cursor-pointer"
+            >
+              <span className="material-symbols-outlined">remove</span>
+            </button>
+            <span className="font-headline-sm text-on-surface w-4 text-center">
+              {quantity}
+            </span>
+            <button 
+              aria-label="Increase quantity" 
+              onClick={() => onIncrease(product.id)}
+              className="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center hover:bg-[#e66000] shadow-sm transition-colors cursor-pointer"
+            >
+              <span className="material-symbols-outlined">add</span>
+            </button>
+          </div>
         </div>
       </div>
-    </article>
+    </div>
   );
 }

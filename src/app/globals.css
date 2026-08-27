@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface: #fbf8ff;
+  --color-surface: #ffffff;
   --color-on-surface: #1a1b22;
-  --color-surface-variant: #e3e1ec;
+  --color-surface-variant: #f4f4f5;
   --color-on-surface-variant: #564334;
-  --color-primary: #904d00;
-  --color-primary-container: #ff8c00;
+  --color-primary: #ff6b00;
+  --color-primary-container: #ff6b00;
   --color-on-primary: #ffffff;
-  --color-outline-variant: #ddc1ae;
-  --color-surface-container: #eeedf7;
+  --color-outline-variant: #e0e0e0;
+  --color-surface-container: #f8f9fa;
   --color-surface-container-lowest: #ffffff;
-  --color-surface-dim: #dad9e3;
+  --color-surface-dim: #ffffff;
+  --color-background: #ffffff;
+  --color-on-background: #1a1b22;
 
   --font-body-md: "Inter", sans-serif;
   --font-display-lg: "Montserrat", sans-serif;
@@ -19,14 +21,16 @@
   --font-headline-sm: "Montserrat", sans-serif;
   --font-label-md: "Inter", sans-serif;
   --font-label-sm: "Inter", sans-serif;
+
+  --spacing-margin-mobile: 24px;
+  --spacing-margin-desktop: 80px;
+  --spacing-container-max: 1280px;
 }
 
 @layer base {
   body {
-    background-color: var(--color-surface);
-    background-image: radial-gradient(circle at top right, var(--color-surface-container), var(--color-surface) 60%);
-    background-attachment: fixed;
-    color: var(--color-on-surface);
+    background-color: var(--color-background);
+    color: var(--color-on-background);
     min-height: 100vh;
   }
 }

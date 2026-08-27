@@ -156,14 +156,21 @@ export async function sendWhatsAppMessage(toPhone: string, text: string): Promis
 
     // Verificar que la sesión de WhatsApp esté conectada y lista (con usuario activo)
     if (activeSocket && (activeSocket as unknown as { user?: object }).user) {
+      const sendWithTimeout = async (jid: string, content: Record<string, unknown>) => {
+        return Promise.race([
+          activeSocket!.sendMessage(jid, content as any),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout de WhatsApp (Bot desconectado)')), 8000))
+        ]);
+      };
+
       // Enviar recibo al cliente
-      await activeSocket.sendMessage(formattedJid, { text });
+      await sendWithTimeout(formattedJid, { text });
       console.log(`📲 Recibo enviado automáticamente al usuario en WhatsApp: ${formattedJid}`);
 
       // Enviar copia del recibo al número oficial de la rotisería (si es un número distinto)
       const officialJid = '5493585762463@s.whatsapp.net';
       if (formattedJid !== officialJid) {
-        await activeSocket.sendMessage(officialJid, { text: `[NUEVO PEDIDO RECIBIDO]\n\n${text}` });
+        await sendWithTimeout(officialJid, { text: `[NUEVO PEDIDO RECIBIDO]\n\n${text}` });
         console.log(`📲 Copia del recibo enviada a la rotisería: ${officialJid}`);
       }
 
@@ -176,6 +183,45 @@ export async function sendWhatsAppMessage(toPhone: string, text: string): Promis
     console.error('Error al enviar mensaje de WhatsApp:', err);
   }
   return false;
+}
+
+// Ejecución directa desde CLI
+if (typeof process !== 'undefined' && process.argv && process.argv[1] && process.argv[1].includes('bot.ts')) {
+  console.log('🚀 Iniciando bot en modo standalone...');
+  connectToWhatsApp();
+
+  import('http').then((http) => {
+    http.createServer((req, res) => {
+      res.setHeader('Access-Control-Allow-Origin', '*');
+      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+      
+      if (req.method === 'OPTIONS') {
+        res.writeHead(200);
+        return res.end();
+      }
+      
+      if (req.method === 'POST' && req.url === '/send') {
+        let body = '';
+        req.on('data', (chunk: Buffer) => { body += chunk.toString(); });
+        req.on('end', async () => {
+          try {
+            const { toPhone, text } = JSON.parse(body);
+            const result = await sendWhatsAppMessage(toPhone, text);
+            res.writeHead(200, { 'Content-Type': 'application/json' });
+            res.end(JSON.stringify({ success: result }));
+          } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'Unknown error';
+            res.writeHead(500);
+            res.end(JSON.stringify({ error: errorMessage }));
+          }
+        });
+      } else {
+        res.writeHead(404);
+        res.end();
+      }
+    }).listen(3001, () => console.log('🔌 Servidor API local del Bot escuchando en http://localhost:3001'));
+  });
 }
 
 // Fin del archivo bot.ts

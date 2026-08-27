@@ -16,6 +16,7 @@ export default function MenuPage() {
   // Map de productId -> cantidad
   const [quantities, setQuantities] = useState<Record<string, number>>({});
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string>('Todos');
 
   // Estados del envío
   const [isSending, setIsSending] = useState(false);
@@ -59,6 +60,15 @@ export default function MenuPage() {
 
   const totalItemsCount = selectedItems.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = selectedItems.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
+
+  // Filter products based on active category
+  const filteredProducts = products.filter((p) => {
+    if (activeCategory === 'Todos') return true;
+    if (activeCategory === 'Sándwiches') return p.category === 'lomos' || p.category === 'milanesas';
+    if (activeCategory === 'Burgers') return p.category === 'hamburguesas';
+    if (activeCategory === 'Papas Fritas') return p.category === 'papas';
+    return true;
+  });
 
   const handleComprar = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -154,15 +164,48 @@ export default function MenuPage() {
         }} 
       />
 
-      <main className="grow w-full max-w-container-max mx-auto px-5 md:px-16 py-8 md:py-12 animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
-        <div className="mb-8 md:mb-12">
-          <h2 className="font-headline-md text-3xl font-bold text-on-surface mb-2">Nuestro Menú</h2>
-          <p className="font-body-md text-on-surface-variant text-base md:text-lg">Los mejores sándwiches y lomos de la ciudad, preparados en el momento.</p>
+      {/* Full Width Hero Section */}
+      <section className="w-full relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center z-0 scale-105" 
+          style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhR8XGXHgtYREhxx7sDEE7PmQnhxmD4NlyWnPlgciGkzYfVAXmxm2nJWwfo0V0ZRKmfKoW4TGd_CaMGVpXAmDib-xbaDgTWBV8k7Sjq_jpm9hco0Ic_cUcXhZd7PekQ5rnXBdTGXTewQwv79v_z53DHFQEhCeHAPZhIusfPYzKE9Fl-Bsg54H5N2H-x-3AdeQNpbSC3R6pSxILUW_ep_cHVWt2NrYHl9CFAmNwyaa4iHwWWsJTpqiO')" }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/60 z-10" />
+        <div className="relative z-20 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col items-center text-center gap-8 mt-16">
+          <h2 className="font-[Montserrat] font-extrabold text-5xl md:text-7xl text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] tracking-tight leading-tight">
+            Sabor que Desborda
+          </h2>
+          <p className="font-body-lg text-white/90 max-w-2xl text-lg md:text-xl drop-shadow-md">
+            Disfrutá de los mejores sándwiches y hamburguesas artesanales de la ciudad. Ingredientes frescos, porciones generosas y un sabor inigualable.
+          </p>
+          <button className="bg-primary text-white font-headline-sm py-4 px-10 rounded-full w-max hover:bg-[#e66000] hover:shadow-[0_8px_24px_rgba(255,107,0,0.4)] hover:-translate-y-1 transition-all duration-300 mt-4 tracking-wide cursor-pointer">
+            Ver Promos
+          </button>
         </div>
+      </section>
 
-        {/* Bento Grid / List Hybrid for Products */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 pb-24">
-          {products.map((product) => (
+      <main className="grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 flex flex-col gap-16 -mt-8 relative z-30">
+        
+        {/* Category Filters */}
+        <section className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x items-center justify-center md:justify-start">
+          {['Todos', 'Sándwiches', 'Burgers', 'Papas Fritas'].map((category) => (
+            <button 
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`snap-start shrink-0 px-8 py-4 rounded-full font-headline-sm shadow-md transition-all cursor-pointer ${
+                activeCategory === category
+                  ? 'bg-primary text-white hover:scale-105'
+                  : 'bg-surface-container text-on-surface hover:bg-surface-variant hover:text-primary'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </section>
+
+        {/* Product Catalog */}
+        <section className="grid grid-cols-1 md:grid-cols-2 gap-8 pb-24">
+          {filteredProducts.map((product) => (
             <ProductCard
               key={product.id}
               product={product}
@@ -171,7 +214,7 @@ export default function MenuPage() {
               onDecrease={handleDecrease}
             />
           ))}
-        </div>
+        </section>
       </main>
 
       <CartSummary 

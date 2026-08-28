@@ -12,9 +12,12 @@ export default function Header({ cartItemCount, onOpenCheckout }: HeaderProps) {
       {/* TopNavBar (Hidden on Mobile, Visible on Desktop) */}
       <header className="hidden md:flex justify-between items-center w-full px-margin-desktop py-6 absolute top-0 z-50 bg-transparent text-white transition-all duration-300">
         <div className="flex items-center gap-4">
-          <Link href="/" className="flex items-center gap-4 cursor-pointer">
-            <h1 className="font-display-lg text-white uppercase tracking-wider drop-shadow-md">Entre Panes</h1>
-            <span className="font-body-md text-white/80 ml-2 drop-shadow-md">Rotisería & Sándwiches</span>
+          <Link href="/" className="flex items-center gap-4 cursor-pointer hover:opacity-90 transition-opacity">
+            <img src="/imgs/logo.jpg" alt="Entre Panes Logo" className="w-14 h-14 rounded-full object-cover border-2 border-white/20 shadow-md" />
+            <div className="hidden sm:flex flex-col">
+              <h1 className="font-display-lg text-white uppercase tracking-wider drop-shadow-md leading-none">Entre Panes</h1>
+              <span className="font-body-md text-white/80 drop-shadow-md">Rotisería & Sándwiches</span>
+            </div>
           </Link>
         </div>
         <nav className="flex items-center">
@@ -34,7 +37,8 @@ export default function Header({ cartItemCount, onOpenCheckout }: HeaderProps) {
 
       {/* Mobile Top AppBar */}
       <header className="md:hidden flex justify-between items-center w-full px-margin-mobile py-4 absolute top-0 z-50 bg-transparent text-white">
-        <Link href="/">
+        <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+          <img src="/imgs/logo.jpg" alt="Entre Panes Logo" className="w-12 h-12 rounded-full object-cover border-2 border-white/20 shadow-md" />
           <h1 className="font-display-lg-mobile text-white uppercase tracking-wider drop-shadow-md">Entre Panes</h1>
         </Link>
         <button 

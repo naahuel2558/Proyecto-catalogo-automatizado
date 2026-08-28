@@ -15,6 +15,9 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   title: "Entre Panes - Menú",
   description: "Rotisería y Sándwiches de Calidad",
+  icons: {
+    icon: '/imgs/logo.jpg',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

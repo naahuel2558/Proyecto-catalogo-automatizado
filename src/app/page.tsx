@@ -177,7 +177,24 @@ export default function MenuPage() {
           <p className="font-body-lg text-white/90 max-w-2xl text-lg md:text-xl drop-shadow-md">
             Disfrutá de los mejores sándwiches y hamburguesas artesanales de la ciudad. Ingredientes frescos, porciones generosas y un sabor inigualable.
           </p>
-          <button className="bg-primary text-white font-headline-sm py-4 px-10 rounded-full w-max hover:bg-[#e66000] hover:shadow-[0_8px_24px_rgba(255,107,0,0.4)] hover:-translate-y-1 transition-all duration-300 mt-4 tracking-wide cursor-pointer">
+          
+          {/* Discreet Info */}
+          <div className="flex flex-col md:flex-row items-center gap-3 md:gap-6 text-white/70 text-sm md:text-base font-body-sm mt-2 mb-2 drop-shadow-sm">
+            <span className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px]">location_on</span> 
+              Dirección de tu Local
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px]">schedule</span> 
+              Mar-Dom 20:00 a 00:00
+            </span>
+            <span className="flex items-center gap-1">
+              <span className="material-symbols-outlined text-[18px]">phone_iphone</span> 
+              +54 9 358 576 2463
+            </span>
+          </div>
+
+          <button className="bg-primary text-white font-headline-sm py-4 px-10 rounded-full w-max hover:bg-[#e66000] hover:shadow-[0_8px_24px_rgba(255,107,0,0.4)] hover:-translate-y-1 transition-all duration-300 mt-2 tracking-wide cursor-pointer">
             Ver Menú
           </button>
         </div>

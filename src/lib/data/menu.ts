@@ -37,14 +37,5 @@ export const INITIAL_PRODUCTS: Product[] = [
     category: 'hamburguesas',
     image: '/imgs/burger-doble.jpeg',
     available: true,
-  },
-  {
-    id: 'papas-con-cheddar-panceta',
-    name: 'Papas Fritas con Cheddar y Panceta',
-    description: 'Porción abundante de papas fritas doradas bañadas en queso cheddar fundido y panceta crocante.',
-    price: 4500,
-    category: 'papas',
-    image: 'https://images.unsplash.com/photo-1576107232684-1279f3908594?auto=format&fit=crop&q=80&w=800',
-    available: true,
-  },
+  }
 ];

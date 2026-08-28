@@ -66,7 +66,6 @@ export default function MenuPage() {
     if (activeCategory === 'Todos') return true;
     if (activeCategory === 'Sándwiches') return p.category === 'lomos' || p.category === 'milanesas';
     if (activeCategory === 'Burgers') return p.category === 'hamburguesas';
-    if (activeCategory === 'Papas Fritas') return p.category === 'papas';
     return true;
   });
 
@@ -188,7 +187,7 @@ export default function MenuPage() {
         
         {/* Category Filters */}
         <section className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x items-center justify-center md:justify-start">
-          {['Todos', 'Sándwiches', 'Burgers', 'Papas Fritas'].map((category) => (
+          {['Todos', 'Sándwiches', 'Burgers'].map((category) => (
             <button 
               key={category}
               onClick={() => setActiveCategory(category)}

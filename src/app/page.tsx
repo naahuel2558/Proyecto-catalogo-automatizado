@@ -179,7 +179,7 @@ export default function MenuPage() {
             Disfrutá de los mejores sándwiches y hamburguesas artesanales de la ciudad. Ingredientes frescos, porciones generosas y un sabor inigualable.
           </p>
           <button className="bg-primary text-white font-headline-sm py-4 px-10 rounded-full w-max hover:bg-[#e66000] hover:shadow-[0_8px_24px_rgba(255,107,0,0.4)] hover:-translate-y-1 transition-all duration-300 mt-4 tracking-wide cursor-pointer">
-            Ver Promos
+            Ver Menú
           </button>
         </div>
       </section>

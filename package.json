@@ -13,7 +13,8 @@
     "test:category-admin": "tsx scripts/test-category-admin.ts",
     "test:kitchen": "tsx scripts/test-kitchen.ts",
     "test:admin-routes": "tsx scripts/test-admin-routes.ts",
-    "postinstall": "prisma skills sync || exit 0"
+    "postinstall": "prisma skills sync || exit 0",
+    "test:receipt-security": "tsx scripts/test-receipt-security.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",

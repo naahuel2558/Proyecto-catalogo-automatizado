@@ -1,66 +1,39 @@
 import { NextResponse } from 'next/server';
-import { sendWhatsAppMessage } from '@/lib/whatsapp/bot';
-import {
-  buildReceiptText,
-  CheckoutError,
-  getReceiptOrder,
-  parseReceiptRequest,
-} from '@/lib/orders/secure-checkout';
 
 export const runtime = 'nodejs';
 
-export async function POST(req: Request) {
-  try {
-    const { orderCode, customerName, customerPhone } = parseReceiptRequest(await req.json());
-    const order = await getReceiptOrder(orderCode);
-    if (!order) {
-      return NextResponse.json({ error: 'Pedido inexistente' }, { status: 404 });
-    }
-    const receiptText = buildReceiptText(order, customerName, customerPhone);
+/**
+ * P0-001 — Production Containment.
+ *
+ * Esta ruta enviaba un mensaje de WhatsApp, desde el número del negocio, hacia el
+ * teléfono recibido en el body. `Order` no persiste `customerPhone`, por lo que el
+ * servidor no tiene ninguna forma fiable de demostrar que ese número pertenece al
+ * pedido. Un tercero podía, en consecuencia, provocar envíos hacia teléfonos
+ * arbitrarios usando la identidad de la rotisería.
+ *
+ * El envío automático queda deshabilitado. La ruta ya no importa ni invoca
+ * `sendWhatsAppMessage` y no puede producir un envío bajo ningún payload.
+ *
+ * El checkout continúa operando: `createOrder` devuelve `whatsappUrl`, un enlace
+ * `wa.me` construido en servidor a partir de la Order validada, que el cliente abre
+ * manualmente hacia el número oficial.
+ *
+ * Reactivación: requiere `EP-002.1` (persistir contacto en `Order`) y `EP-007`
+ * (integración oficial de WhatsApp Cloud API). Baileys no es infraestructura de
+ * producción.
+ */
+const DISABLED_RESPONSE = {
+  error: 'RECEIPT_AUTOSEND_DISABLED',
+  message:
+    'El envío automático de recibos por WhatsApp está deshabilitado. El pedido se registra igual y el recibo se envía desde el enlace manual de WhatsApp.',
+} as const;
 
-    console.log(`📩 Solicitud de recibo ${orderCode} para ${customerPhone} (${customerName})`);
+export async function POST() {
+  // El handler no lee el body en ningún momento: no existe dato del cliente
+  // capaz de seleccionar un destinatario ni de disparar un envío.
+  return NextResponse.json(DISABLED_RESPONSE, { status: 410 });
+}
 
-    let sent = false;
-
-    if (process.env.NODE_ENV === 'development') {
-      try {
-        const res = await fetch('http://localhost:3001/send', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ toPhone: customerPhone, text: receiptText })
-        });
-        if (res.ok) {
-          const data = await res.json();
-          sent = data.success;
-          console.log('✅ Recibo enviado a través del bot standalone.');
-        } else {
-          throw new Error('Fallback');
-        }
-      } catch {
-        console.log('⚠️ Bot standalone no detectado en el puerto 3001, usando instancia interna...');
-        sent = await sendWhatsAppMessage(customerPhone, receiptText);
-      }
-    } else {
-      // Enviar el recibo por WhatsApp automáticamente al teléfono del cliente
-      sent = await sendWhatsAppMessage(customerPhone, receiptText);
-    }
-
-    return NextResponse.json({
-      success: true,
-      message: sent
-        ? 'Recibo de pedido enviado por WhatsApp al cliente exitosamente.'
-        : 'Pedido registrado en cocina. (Abre la app de WhatsApp si la sesión del bot no está vinculada aún).',
-      sentTo: customerPhone,
-      botSentStatus: sent,
-    });
-  } catch (error) {
-    if (error instanceof CheckoutError) {
-      return NextResponse.json({ error: error.message }, { status: 400 });
-    }
-    console.error('Error procesando envío de recibo por WhatsApp:', error);
-    return NextResponse.json(
-      { error: 'Error interno al procesar el recibo' },
-      { status: 500 }
-    );
-  }
+export async function GET() {
+  return NextResponse.json(DISABLED_RESPONSE, { status: 410 });
 }

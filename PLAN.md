@@ -11,6 +11,68 @@ Estados:
 
 ---
 
+# P0 — Production Safety
+
+Sección de contención inmediata. Tiene prioridad sobre cualquier tarea EP pendiente.
+
+## P0-001 — Production Containment
+
+Estado: `[x]` Completado y validado el 31/08/2026.
+
+Informe: `auditorias/P0-001-production-containment-report.md`
+
+Motivo:
+
+Se detectaron dos riesgos de producción que requieren contención antes de continuar con el roadmap funcional:
+
+1. `/api/send-receipt` permitía que un tercero solicitara el envío de un mensaje de WhatsApp, desde el número del negocio, hacia un teléfono arbitrario indicado en el body.
+2. Artefactos locales (`prisma/dev.db`, `tsconfig.tsbuildinfo`) estaban trackeados por Git.
+
+Alcance:
+
+- [x] Auditar `/api/send-receipt` y todo consumidor de `sendWhatsAppMessage`.
+- [x] Deshabilitar el envío automático mientras `Order` no persista `customerPhone`.
+- [x] Conservar el flujo manual `wa.me` generado server-side desde la Order validada.
+- [x] Auditar y corregir el tracking de artefactos locales en Git.
+- [x] Ampliar `.gitignore` con patrones SQLite y build artifacts.
+- [x] Tests de seguridad del endpoint de recibo (casos A–D).
+- [x] Informe `auditorias/P0-001-production-containment-report.md`.
+
+Fuera de alcance (explícito):
+
+- Migración a PostgreSQL → `INFRA-001`.
+- Persistencia de `customerName` / `customerPhone` en `Order` → `EP-002.1`.
+- Reescritura del historial de Git.
+- Middleware / guards.
+- WhatsApp Cloud API → `EP-007`.
+
+Criterio de aceptación:
+
+No existe ninguna ruta pública capaz de usar el WhatsApp del negocio para enviar mensajes a un teléfono arbitrario, y los artefactos SQLite locales dejan de incorporarse a nuevos commits.
+
+Bloqueo:
+
+P0-001 bloqueó el avance hacia `EP-007` y posteriores hasta su cierre. Bloqueo levantado el 31/08/2026.
+
+EP-004, EP-005 y EP-006 ya estaban completadas cuando se detectó P0; se conserva su estado real y no se retiraron del roadmap.
+
+---
+
+## INFRA-001 — PostgreSQL Production Foundation
+
+Estado: `[ ]` Pendiente. Desbloqueada: P0-001 cerrada. No iniciar sin confirmación.
+
+`prisma/schema.prisma` declara `url = "file:./dev.db"` de forma literal. La aplicación está desplegada en Vercel, cuyo filesystem es efímero, por lo que la persistencia real de producción no está garantizada.
+
+- [ ] Reemplazar la URL literal por `env("DATABASE_URL")`.
+- [ ] Cambiar el provider a `postgresql`.
+- [ ] Migrar el historial de migraciones.
+- [ ] Definir variables de entorno por ambiente.
+- [ ] Validar `migrate status` contra la base real.
+- [ ] Revalidar Secure Checkout, Product Admin, Category Admin y Cocina.
+
+---
+
 # FASE 0 — Auditoría inicial
 
 ## EP-000 — Auditoría técnica
@@ -108,7 +170,9 @@ Manipular precio desde navegador no altera el pedido real.
 
 ## SEC-001 — Receipt Endpoint Hardening
 
-Estado: `[ ]` Pendiente
+Estado: `[x]` Contenida por `P0-001` el 31/08/2026.
+
+El envío automático quedó deshabilitado y `/api/send-receipt` ya no puede provocar un envío. La resolución de fondo —persistir el contacto del pedido invitado para poder reactivar el envío de forma segura— queda en `EP-002.1`.
 
 Antes de conectar automatizaciones externas reales de WhatsApp se deberá revisar `/api/send-receipt` para evitar abuso mediante reenvíos a números arbitrarios y definir si los datos de contacto del pedido invitado deben persistirse.
 
@@ -201,6 +265,8 @@ El personal puede operar pedidos sin entrar al CRM.
 # FASE 5 — WhatsApp
 
 ## EP-007 — WhatsApp Webhook
+
+Estado: `[!]` Bloqueado. Requiere `INFRA-001` y una integración oficial de WhatsApp (Cloud API). Baileys no es infraestructura de producción.
 
 Endpoint:
 
@@ -339,8 +405,8 @@ Si aparece un problema fuera del alcance:
 
 # TAREA ACTUAL RECOMENDADA
 
-`EP-000 — Auditoría técnica`
+`INFRA-001 — PostgreSQL Production Foundation`
 
-No modificar arquitectura todavía.
+P0-001 quedó cerrada. El siguiente bloqueo real es la persistencia de producción: `schema.prisma` declara `url = "file:./dev.db"` de forma literal y el despliegue corre sobre un filesystem efímero.
 
-Primero obtener estado real del repositorio.
+No iniciar hasta confirmarlo con el responsable del plan.

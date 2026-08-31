@@ -95,19 +95,9 @@ export default function MenuClient({ initialProducts, categories }: MenuClientPr
         return;
       }
 
-      try {
-        await fetch('/api/send-receipt', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            orderCode: result.order.orderCode,
-            customerName: result.customerName,
-            customerPhone: result.customerPhone,
-          }),
-        });
-      } catch (receiptError) {
-        console.error('No se pudo enviar el recibo automáticamente:', receiptError);
-      }
+      // P0-001: el envío automático de recibos por WhatsApp está deshabilitado.
+      // El recibo se envía desde `result.whatsappUrl`, un enlace wa.me construido en
+      // servidor a partir de la Order validada, que el cliente abre manualmente.
 
       setOrderCompleted({
         id: result.order.orderCode,

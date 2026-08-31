@@ -40,5 +40,15 @@ whatsapp-auth-session
 stitch_downloads
 
 # typescript
-*.tsbuildinfo
+**/*.tsbuildinfo
 next-env.d.ts
+
+# P0-001 — bases de datos locales y artefactos generados
+# Nunca deben incorporarse a Git: contienen datos operativos del entorno local.
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
+*.db.backup
+*.sqlite
+*.sqlite3

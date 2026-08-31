@@ -193,14 +193,8 @@ if (typeof process !== 'undefined' && process.argv && process.argv[1] && process
 
   import('http').then((http) => {
     http.createServer((req, res) => {
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-      
-      if (req.method === 'OPTIONS') {
-        res.writeHead(200);
-        return res.end();
-      }
+      // P0-001: sin CORS permisivo ni preflight. Esta utilidad es exclusivamente
+      // local de desarrollo y no debe ser invocable desde un origen web.
       
       if (req.method === 'POST' && req.url === '/send') {
         let body = '';
@@ -221,7 +215,9 @@ if (typeof process !== 'undefined' && process.argv && process.argv[1] && process
         res.writeHead(404);
         res.end();
       }
-    }).listen(3001, () => console.log('🔌 Servidor API local del Bot escuchando en http://localhost:3001'));
+      // P0-001: se ata explícitamente a 127.0.0.1. Antes escuchaba en todas las
+      // interfaces, exponiendo un envío a teléfono arbitrario a toda la red local.
+    }).listen(3001, '127.0.0.1', () => console.log('🔌 Servidor API local del Bot (solo 127.0.0.1) en http://localhost:3001'));
   });
 }
 

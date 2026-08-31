@@ -7,14 +7,14 @@ Este archivo define las reglas de negocio, contexto general y especificaciones o
 ## 🎯 Objetivo General y Configuración de Negocio
 Automatizar la rotisería **"Entre Panes"**.
 - **Número oficial de WhatsApp**: `+54 9 3582 435386` / `54935582435386`.
-- **URL en Vivo (Vercel)**: `https://ia-entre-panes.vercel.app`.
+- **URL en Vivo (Vercel)**: `https://entrepanes-iota.vercel.app`.
 
 ---
 
 ## 👥 Módulos del Sistema
 
 1. **OrderAgent (Bot de WhatsApp)**
-   - Responde inmediatamente a cualquier mensaje entrante con el saludo oficial y el link `https://ia-entre-panes.vercel.app`.
+   - Responde inmediatamente a cualquier mensaje entrante con el saludo oficial y el link `https://entrepanes-iota.vercel.app`.
 
 2. **Catálogo Web de la Rotisería (`src/app/page.tsx`)**
    - Muestra productos con controles directos `- 0 +` por tarjeta.

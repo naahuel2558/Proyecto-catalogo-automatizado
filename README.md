@@ -8,7 +8,7 @@ Sistema inteligente de automatización de pedidos por WhatsApp y Catálogo Web i
 
 * **Negocio**: Rotisería & Casa de Comidas *"Entre Panes"*.
 * **Número de WhatsApp de la Rotisería**: `+54 9 3585 762463` (`5493585762463`).
-* **URL en Vivo (Producción Vercel)**: **[https://ia-entre-panes.vercel.app](https://ia-entre-panes.vercel.app)**.
+* **URL en Vivo (Producción Vercel)**: **[https://entrepanes-iota.vercel.app](https://entrepanes-iota.vercel.app)**.
 * **Problema Resuelto**: Eliminación de la atención manual por WhatsApp en horas pico. Ahora los clientes reciben una respuesta automática inmediata con el catálogo web, arman su carrito con botones directos `- 0 +` y envían su recibo listo directamente a la rotisería.
 
 ---
@@ -24,7 +24,7 @@ sequenceDiagram
     participant Cocina as 👨‍🍳 Vista Recibos (/cocina)
 
     Cliente->>WA: Envia primer mensaje por WhatsApp
-    WA-->>Cliente: Saludo automático + 🔗 Link a https://ia-entre-panes.vercel.app
+    WA->>Cliente: Saludo automático + 🔗 Link a https://entrepanes-iota.vercel.app
     Cliente->>Web: Ingresa a la web y selecciona productos con botones (- 0 +)
     Web-->>Cliente: Calcula la suma total en tiempo real
     Cliente->>Web: Presiona "COMPRAR" (Formulario con +54 pre-configurado)
@@ -46,7 +46,7 @@ sequenceDiagram
 * **Destino del Recibo**: Al hacer clic en *"Generar y Enviar Recibo a WhatsApp"*, se abre WhatsApp con la comanda dirigida a la rotisería (`+54 9 3585 762463`).
 
 ### B. Vista de Recibos para el Personal (`src/app/cocina/page.tsx`)
-* Accesible mediante el enlace **`https://ia-entre-panes.vercel.app/cocina`**.
+* Accesible mediante el enlace **`https://entrepanes-iota.vercel.app/cocina`**.
 * Muestra los recibos entrantes en tiempo real con datos del cliente, dirección, ítems y botón de **"Despachar Pedido"**.
 
 ### C. Agente Bot de WhatsApp (`src/lib/whatsapp/bot.ts`)
@@ -69,7 +69,7 @@ Horario de atención: Lunes a Domingos de 19:30hs a 23:30hs!
 
 ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️
 
-https://ia-entre-panes.vercel.app
+https://entrepanes-iota.vercel.app
 
 Estamos a tu disposición!
 
@@ -113,7 +113,7 @@ $23000.00
 
 ## 🚀 5. Despliegue y Comandos
 
-* **URL Producción en Vercel**: `https://ia-entre-panes.vercel.app`
+* **URL Producción en Vercel**: `https://entrepanes-iota.vercel.app`
 * **Vista de Recibos Local**: `http://localhost:3000/cocina`
 * **Ejecutar servidor local**: `npm run dev`
 * **Ejecutar Bot de WhatsApp**: `npm run whatsapp`

@@ -22,7 +22,7 @@ Horario de atención: Lunes a Domingos de 19:30hs a 23:30hs!
 
 ⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️
 
-*https://ia-entre-panes.vercel.app*
+*https://entrepanes-iota.vercel.app*
 
 Estamos a tu disposición!
 

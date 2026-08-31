@@ -38,8 +38,8 @@ export default function Header({ cartItemCount, onOpenCheckout }: HeaderProps) {
       {/* Mobile Top AppBar */}
       <header className="md:hidden flex justify-between items-center w-full px-margin-mobile py-4 absolute top-0 z-50 bg-transparent text-white">
         <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-          <img src="/imgs/logo.jpg" alt="Entre Panes Logo" className="w-12 h-12 rounded-full object-cover border-2 border-white/20 shadow-md" />
-          <h1 className="font-display-lg-mobile text-white uppercase tracking-wider drop-shadow-md">Entre Panes</h1>
+          <img src="/imgs/logo.jpg" alt="Entre Panes Logo" className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-white/20 shadow-md" />
+          <h1 className="text-xl md:text-2xl font-black font-[Montserrat] text-white uppercase tracking-wider drop-shadow-md">Entre Panes</h1>
         </Link>
         <button 
           onClick={onOpenCheckout}

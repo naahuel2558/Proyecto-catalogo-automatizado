@@ -164,17 +164,17 @@ export default function MenuPage() {
       />
 
       {/* Full Width Hero Section */}
-      <section className="w-full relative h-[600px] md:h-[700px] flex items-center justify-center overflow-hidden">
+      <section className="w-full relative h-[450px] md:h-[700px] flex items-center justify-center overflow-hidden">
         <div 
           className="absolute inset-0 bg-cover bg-center z-0 scale-105" 
           style={{ backgroundImage: "url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhR8XGXHgtYREhxx7sDEE7PmQnhxmD4NlyWnPlgciGkzYfVAXmxm2nJWwfo0V0ZRKmfKoW4TGd_CaMGVpXAmDib-xbaDgTWBV8k7Sjq_jpm9hco0Ic_cUcXhZd7PekQ5rnXBdTGXTewQwv79v_z53DHFQEhCeHAPZhIusfPYzKE9Fl-Bsg54H5N2H-x-3AdeQNpbSC3R6pSxILUW_ep_cHVWt2NrYHl9CFAmNwyaa4iHwWWsJTpqiO')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/60 z-10" />
-        <div className="relative z-20 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col items-center text-center gap-8 mt-16">
-          <h2 className="font-[Montserrat] font-extrabold text-5xl md:text-7xl text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] tracking-tight leading-tight">
+        <div className="relative z-20 w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col items-center text-center gap-6 md:gap-8 mt-12 md:mt-16">
+          <h2 className="font-[Montserrat] font-extrabold text-4xl sm:text-5xl md:text-7xl text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] tracking-tight leading-tight">
             Sabor que Desborda
           </h2>
-          <p className="font-body-lg text-white/90 max-w-2xl text-lg md:text-xl drop-shadow-md">
+          <p className="font-body-lg text-white/90 max-w-2xl text-base md:text-xl drop-shadow-md">
             Disfrutá de los mejores sándwiches y hamburguesas artesanales de la ciudad. Ingredientes frescos, porciones generosas y un sabor inigualable.
           </p>
           
@@ -200,10 +200,10 @@ export default function MenuPage() {
         </div>
       </section>
 
-      <main className="grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-16 flex flex-col gap-16 -mt-8 relative z-30">
+      <main className="grow w-full max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-10 md:py-16 flex flex-col gap-10 md:gap-16 -mt-6 md:-mt-8 relative z-30">
         
         {/* Category Filters */}
-        <section className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x items-center justify-center md:justify-start">
+        <section className="flex gap-3 md:gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x items-center justify-start md:justify-center -mx-margin-mobile px-margin-mobile md:mx-0 md:px-0">
           {['Todos', 'Sándwiches', 'Burgers'].map((category) => (
             <button 
               key={category}

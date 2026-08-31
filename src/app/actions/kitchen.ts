@@ -31,9 +31,8 @@ export async function transitionKitchenOrderAction(
   expectedStatus: unknown,
   nextStatus: unknown,
 ): Promise<KitchenActionResult> {
-  const session = await getServerSession(authOptions);
-
   try {
+    const session = await getServerSession(authOptions);
     const order = await transitionOrderStatusForKitchen(
       orderId,
       expectedStatus,

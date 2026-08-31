@@ -10,6 +10,7 @@ const password = crypto.randomBytes(18).toString('base64url');
 const regularEmail = `ep005-user-${suffix}@example.test`;
 const regularPassword = crypto.randomBytes(18).toString('base64url');
 const userIds: string[] = [];
+let kitchenOrderId: string | undefined;
 
 function mergeCookies(store: Map<string, string>, response: Response) {
   const headers = response.headers as Headers & { getSetCookie?: () => string[] };
@@ -97,12 +98,34 @@ async function main() {
     userIds.push(regularUser.id);
 
     await expectRedirect('/admin/categorias', '/login');
+    await expectRedirect('/cocina', '/login');
     const regularCookies = await login(regularEmail, regularPassword);
     await expectRedirect('/admin/categorias', '/', regularCookies);
+    await expectRedirect('/cocina', '/', regularCookies);
     const cookies = await login(email, password);
 
     const product = await prisma.product.findFirstOrThrow({ orderBy: { name: 'asc' } });
     const category = await prisma.category.findFirstOrThrow({ orderBy: { name: 'asc' } });
+    const kitchenSnapshotName = `Snapshot Cocina EP-006 ${suffix}`;
+    const kitchenOrder = await prisma.order.create({
+      data: {
+        orderCode: `EP-ROUTE-${suffix.toUpperCase()}`,
+        total: 4321,
+        status: 'CONFIRMED',
+        fulfillmentType: 'PICKUP',
+        paymentMethod: 'Efectivo',
+        notes: 'Fixture HTTP temporal',
+        items: {
+          create: {
+            productId: product.id,
+            productName: kitchenSnapshotName,
+            unitPrice: 4321,
+            quantity: 1,
+          },
+        },
+      },
+    });
+    kitchenOrderId = kitchenOrder.id;
     await expectPage('/', product.name, cookies);
     await expectPage('/login', 'Iniciar Sesión', cookies);
     await expectPage('/registro', 'Crear Cuenta', cookies);
@@ -115,10 +138,12 @@ async function main() {
     await expectPage('/admin/categorias', 'Orden para un menú que crece.', cookies);
     await expectPage('/admin/categorias/nueva', 'Dale un lugar a lo próximo.', cookies);
     await expectPage(`/admin/categorias/${category.id}`, category.name, cookies);
-    await expectPage('/cocina', 'Recepción de Recibos', cookies);
+    await expectPage('/cocina', 'Cocina en marcha.', cookies);
+    await expectPage('/cocina', kitchenSnapshotName, cookies);
 
-    console.log('EP-005 rutas: catálogo, auth, perfil, clientes, productos, categorías y cocina aprobadas.');
+    console.log('EP-006 rutas: catálogo, auth, perfil, clientes, productos, categorías y Cocina protegida aprobadas.');
   } finally {
+    if (kitchenOrderId) await prisma.order.deleteMany({ where: { id: kitchenOrderId } });
     if (userIds.length > 0) await prisma.user.deleteMany({ where: { id: { in: userIds } } });
     await prisma.$disconnect();
   }

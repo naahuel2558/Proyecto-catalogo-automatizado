@@ -173,24 +173,24 @@ Ruta:
 
 ## EP-006 — Cocina
 
-Estado: `[~]` En progreso — auditoría previa completada el 31/08/2026.
+Estado: `[x]` Completado y validado el 31/08/2026.
 
-Decisiones de implementación: Prisma será la única fuente de pedidos; acceso operativo con el rol `ADMIN` existente; transiciones validadas y condicionales en servidor; snapshots de `OrderItem` inmutables; sin cambios de schema ni migraciones previstos.
+Resumen: Cocina quedó conectada exclusivamente a Prisma, protegida con el rol `ADMIN` existente y operando transiciones server-side condicionales. Se preservaron los snapshots de `OrderItem`, se agregó refresh cada 15 segundos, suite A–P y regresión completa. No hubo cambios de schema ni migraciones. EP-007 mantiene pendiente la confirmación automática por webhook y la persistencia de contacto invitado continúa como decisión futura ya documentada en SEC-001/EP-003.
 
 Ruta:
 
 `/cocina`
 
-- [ ] Proteger acceso.
-- [ ] Mostrar pedidos `CONFIRMED`.
-- [ ] Mostrar pedidos `PREPARING`.
-- [ ] Mostrar pedidos `READY`.
-- [ ] Comenzar preparación.
-- [ ] Marcar listo.
-- [ ] Marcar entregado.
-- [ ] Cancelación controlada.
-- [ ] Actualización rápida.
-- [ ] Diseño usable en tablet/escritorio.
+- [x] Proteger acceso.
+- [x] Mostrar pedidos `CONFIRMED`.
+- [x] Mostrar pedidos `PREPARING`.
+- [x] Mostrar pedidos `READY`.
+- [x] Comenzar preparación.
+- [x] Marcar listo.
+- [x] Marcar entregado.
+- [x] Cancelación controlada.
+- [x] Actualización rápida.
+- [x] Diseño usable en tablet/escritorio.
 
 Criterio de aceptación:
 

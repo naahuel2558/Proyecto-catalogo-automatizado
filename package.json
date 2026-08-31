@@ -11,6 +11,7 @@
     "test:secure-checkout": "tsx scripts/test-secure-checkout.ts",
     "test:product-admin": "tsx scripts/test-product-admin.ts",
     "test:category-admin": "tsx scripts/test-category-admin.ts",
+    "test:kitchen": "tsx scripts/test-kitchen.ts",
     "test:admin-routes": "tsx scripts/test-admin-routes.ts",
     "postinstall": "prisma skills sync || exit 0"
   },

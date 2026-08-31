@@ -3,6 +3,7 @@ import makeWASocket, {
   useMultiFileAuthState,
   fetchLatestBaileysVersion,
   makeCacheableSignalKeyStore,
+  AnyMessageContent
 } from '@whiskeysockets/baileys';
 import { Boom } from '@hapi/boom';
 import qrcode from 'qrcode-terminal';
@@ -156,9 +157,9 @@ export async function sendWhatsAppMessage(toPhone: string, text: string): Promis
 
     // Verificar que la sesión de WhatsApp esté conectada y lista (con usuario activo)
     if (activeSocket && (activeSocket as unknown as { user?: object }).user) {
-      const sendWithTimeout = async (jid: string, content: Record<string, unknown>) => {
+      const sendWithTimeout = async (jid: string, content: AnyMessageContent) => {
         return Promise.race([
-          activeSocket!.sendMessage(jid, content as any),
+          activeSocket!.sendMessage(jid, content),
           new Promise((_, reject) => setTimeout(() => reject(new Error('Timeout de WhatsApp (Bot desconectado)')), 8000))
         ]);
       };

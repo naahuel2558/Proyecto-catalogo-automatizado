@@ -1,18 +1,24 @@
 import { NextResponse } from 'next/server';
 import { sendWhatsAppMessage } from '@/lib/whatsapp/bot';
+import {
+  buildReceiptText,
+  CheckoutError,
+  getReceiptOrder,
+  parseReceiptRequest,
+} from '@/lib/orders/secure-checkout';
 
 export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { customerName, customerPhone, receiptText } = body;
-
-    if (!customerPhone || !receiptText) {
-      return NextResponse.json({ error: 'Faltan datos obligatorios' }, { status: 400 });
+    const { orderCode, customerName, customerPhone } = parseReceiptRequest(await req.json());
+    const order = await getReceiptOrder(orderCode);
+    if (!order) {
+      return NextResponse.json({ error: 'Pedido inexistente' }, { status: 404 });
     }
+    const receiptText = buildReceiptText(order, customerName, customerPhone);
 
-    console.log(`📩 Solicitud recibida para enviar recibo a ${customerPhone} (${customerName})`);
+    console.log(`📩 Solicitud de recibo ${orderCode} para ${customerPhone} (${customerName})`);
 
     let sent = false;
 
@@ -48,10 +54,12 @@ export async function POST(req: Request) {
       botSentStatus: sent,
     });
   } catch (error) {
+    if (error instanceof CheckoutError) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     console.error('Error procesando envío de recibo por WhatsApp:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Error interno al procesar el recibo';
     return NextResponse.json(
-      { error: errorMessage },
+      { error: 'Error interno al procesar el recibo' },
       { status: 500 }
     );
   }

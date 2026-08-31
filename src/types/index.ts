@@ -1,4 +1,16 @@
-export type OrderStatus = 'PENDIENTE' | 'EN_PREPARACION' | 'LISTO' | 'EN_CAMINO' | 'ENTREGADO' | 'CANCELADO';
+export const ORDER_STATUS = {
+  DRAFT: 'DRAFT',
+  WAITING_WHATSAPP: 'WAITING_WHATSAPP',
+  CONFIRMED: 'CONFIRMED',
+  PREPARING: 'PREPARING',
+  READY: 'READY',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+} as const;
+
+export const ORDER_STATUSES = Object.values(ORDER_STATUS);
+
+export type OrderStatus = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
 
 export type PaymentMethod = 'Efectivo' | 'Transferencia' | 'MercadoPago';
 
@@ -7,7 +19,7 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  category: 'lomos' | 'milanesas' | 'hamburguesas' | 'combos' | 'papas';
+  category: string;
   image?: string;
   badge?: string;
   available: boolean;

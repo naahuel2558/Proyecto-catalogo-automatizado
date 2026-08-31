@@ -43,7 +43,7 @@ export default function CheckoutModal({
         <div className="flex items-center justify-between border-b border-outline-variant/20 pb-3.5">
           <div>
             <h2 className="font-headline-md text-lg md:text-xl text-on-surface">
-              {orderCompleted ? '¡Pedido Confirmado!' : 'Finalizar Pedido'}
+              {orderCompleted ? '¡Pedido registrado!' : 'Finalizar Pedido'}
             </h2>
             {!orderCompleted && (
               <p className="font-label-sm text-xs text-primary font-bold mt-0.5">
@@ -68,10 +68,10 @@ export default function CheckoutModal({
 
             <div>
               <h3 className="font-headline-sm text-base text-on-surface">
-                Recibo Enviado Automáticamente
+                Pedido listo para enviar
               </h3>
               <p className="font-body-md text-xs text-on-surface-variant mt-1 leading-relaxed">
-                El sistema ha procesado y enviado el recibo de tu pedido <strong>#{orderCompleted.id}</strong> directamente por WhatsApp al celular:
+                Registramos el pedido <strong>{orderCompleted.id}</strong>. Abrí WhatsApp para enviarlo a Entre Panes; quedará pendiente de confirmación hasta que el negocio lo reciba.
               </p>
               <p className="font-label-md text-sm font-bold text-primary mt-2 bg-primary-fixed-dim/20 py-1.5 rounded-lg border border-primary-fixed-dim/60 inline-block px-3">
                 {orderCompleted.phone}

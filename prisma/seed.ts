@@ -1,6 +1,32 @@
 import { PrismaClient } from '@prisma/client';
 import { INITIAL_PRODUCTS } from '../src/lib/data/menu';
 
+/**
+ * INFRA-001 — Proteccion del seed frente a bases no locales.
+ *
+ * Este seed es bootstrap de DESARROLLO, no una migracion de datos productivos.
+ * No borra filas, pero el `update` de cada producto reescribe name, description,
+ * price, image, categoryId e isAvailable con los valores hardcodeados de
+ * `src/lib/data/menu.ts`. Ejecutarlo contra produccion revertiria cualquier precio
+ * o disponibilidad que el administrador haya cambiado desde /admin/productos.
+ *
+ * Por eso solo corre sin friccion contra una base local. Contra cualquier otra hay
+ * que confirmar explicitamente con SEED_ALLOW_NON_LOCAL=1.
+ */
+const databaseUrl = process.env.DATABASE_URL ?? '';
+const isLocalDatabase = databaseUrl.startsWith('file:');
+
+if (!isLocalDatabase && process.env.SEED_ALLOW_NON_LOCAL !== '1') {
+  console.error('\n[INFRA-001] Seed ABORTADO.\n');
+  console.error('DATABASE_URL no apunta a una base local y el seed sobrescribe');
+  console.error('precios, nombres y disponibilidad del catalogo con los valores de');
+  console.error('src/lib/data/menu.ts. En produccion eso revierte los cambios hechos');
+  console.error('desde /admin/productos.\n');
+  console.error('Si realmente es un bootstrap inicial de una base vacia:');
+  console.error('  SEED_ALLOW_NON_LOCAL=1 npx prisma db seed\n');
+  process.exit(1);
+}
+
 const prisma = new PrismaClient();
 
 async function main() {

@@ -60,16 +60,101 @@ EP-004, EP-005 y EP-006 ya estaban completadas cuando se detectó P0; se conserv
 
 ## INFRA-001 — PostgreSQL Production Foundation
 
-Estado: `[ ]` Pendiente. Desbloqueada: P0-001 cerrada. No iniciar sin confirmación.
+Estado: `[~]` En progreso — **bloqueada por aprovisionamiento externo**.
 
-`prisma/schema.prisma` declara `url = "file:./dev.db"` de forma literal. La aplicación está desplegada en Vercel, cuyo filesystem es efímero, por lo que la persistencia real de producción no está garantizada.
+Informe: `auditorias/INFRA-001-postgresql-foundation-report.md`
 
-- [ ] Reemplazar la URL literal por `env("DATABASE_URL")`.
-- [ ] Cambiar el provider a `postgresql`.
-- [ ] Migrar el historial de migraciones.
-- [ ] Definir variables de entorno por ambiente.
-- [ ] Validar `migrate status` contra la base real.
+Completado (no depende de un proveedor):
+
+- [x] Eliminar la URL literal de `schema.prisma`; la conexión se resuelve con `env("DATABASE_URL")`.
+- [x] Documentar todas las variables en `.env.example` (versionado, sin valores).
+- [x] Separar conceptualmente Local / Preview / Production.
+- [x] Definir la estrategia de baseline PostgreSQL (las migraciones actuales son SQL de SQLite).
+- [x] Aislar las suites de test de cualquier base no local (`scripts/_guard-test-db.ts`).
+- [x] Proteger `prisma/seed.ts` frente a bases no locales.
+- [x] `prisma generate` en el script de build.
+- [x] Auditar los datos a preservar.
+- [x] Actualizar `README.md` con la arquitectura real.
+
+Bloqueado (requiere una acción externa del responsable):
+
+- [ ] Aprovisionar la instancia PostgreSQL de Production.
+- [ ] Aprovisionar la instancia PostgreSQL de Preview.
+- [ ] Cargar `DATABASE_URL` y `DIRECT_DATABASE_URL` en Vercel por entorno.
+- [ ] Cambiar `provider` a `postgresql` y añadir `directUrl`.
+- [ ] Generar la migración baseline y aplicarla con `prisma migrate deploy`.
+- [ ] Smoke test no destructivo contra la instancia real.
 - [ ] Revalidar Secure Checkout, Product Admin, Category Admin y Cocina.
+
+Motivo del bloqueo:
+
+Confirmado en una segunda revisión (31/08/2026): **la base PostgreSQL todavía no
+fue creada**. No existe integración Neon ni ningún proyecto de Vercel
+correspondiente a esta aplicación; el declarado en `.vercel/project.json` no es
+alcanzable y ninguno de los proyectos accesibles pertenece a IA ENTRE PANES.
+
+No se relinkeó por deducción: vincular un proyecto ajeno habría expuesto su
+configuración y arriesgado apuntar la base incorrecta. No se inventaron
+credenciales, nombres de variables ni recursos con costo.
+
+Pasos para desbloquear (ver §18.13 del informe):
+
+1. Crear la base en Neon, con *database branching* habilitado para Preview.
+2. Crear o identificar el proyecto de Vercel y conectarlo al repositorio.
+3. `vercel link` para reparar `.vercel/project.json`.
+4. Conectar la integración Neon al proyecto.
+5. `vercel env ls` para verificar los nombres reales de las variables inyectadas.
+
+Criterio de aceptación:
+
+
+La aplicación desplegada persiste datos de forma durable en PostgreSQL sin
+depender de SQLite local, y ni Preview ni los tests pueden modificar Production.
+
+---
+
+## DOMAIN-001 — PostgreSQL enum hardening
+
+Estado: `[ ]` Pendiente. Requiere `INFRA-001`.
+
+`Order.status` y `User.role` son `String` porque SQLite no soporta enums de Prisma.
+La base acepta hoy cualquier valor. Sobre PostgreSQL corresponde convertirlos a
+enums reales. Es una decisión de dominio: **no** se ejecutó dentro de INFRA-001.
+
+---
+
+## EP-002.1 — Guest Order Identity
+
+Estado: `[ ]` Pendiente.
+
+`Order` no persiste `customerName` ni `customerPhone`. Se validan en el checkout,
+se usan para el texto del recibo y se descartan. Para el pedido invitado —el flujo
+mayoritario— Cocina muestra "Pedido invitado" y no tiene a quién llamar.
+
+Es además el prerrequisito para reactivar cualquier envío automático de WhatsApp:
+sin contacto persistido, el servidor no puede demostrar que un número pertenece a
+un pedido (ver `P0-001`).
+
+---
+
+## SEC-002 — Unified Route Protection
+
+Estado: `[ ]` Pendiente.
+
+Conviven cuatro patrones de autorización: `requireAdminPage()`, `assertAdminActor()`,
+guards inline con `getServerSession` y un guard cliente con `useSession` en
+`/admin/clientes`. No existe `middleware.ts`: la protección depende de que cada
+página nueva recuerde invocar el guard.
+
+---
+
+## TEST-001 — Isolated Test Infrastructure
+
+Estado: `[ ]` Pendiente.
+
+`scripts/_guard-test-db.ts` (INFRA-001) impide que las suites toquen una base no
+local, pero siguen siendo scripts `tsx` sin runner, sin CI y compartiendo `dev.db`
+con el desarrollo. Falta Vitest y una base efímera por corrida.
 
 ---
 
@@ -405,8 +490,23 @@ Si aparece un problema fuera del alcance:
 
 # TAREA ACTUAL RECOMENDADA
 
-`INFRA-001 — PostgreSQL Production Foundation`
+`INFRA-001 — PostgreSQL Production Foundation` quedó en `[~]`, bloqueada por una
+acción externa: no existe ninguna instancia PostgreSQL aprovisionada ni accesible.
 
-P0-001 quedó cerrada. El siguiente bloqueo real es la persistencia de producción: `schema.prisma` declara `url = "file:./dev.db"` de forma literal y el despliegue corre sobre un filesystem efímero.
+Todo lo que no dependía de un proveedor está hecho: la URL dejó de estar
+hardcodeada, las variables están documentadas en `.env.example`, las suites y el
+seed no pueden tocar una base no local, y el README refleja la arquitectura real.
 
-No iniciar hasta confirmarlo con el responsable del plan.
+Para desbloquearla hace falta, de parte del responsable:
+
+1. Aprovisionar PostgreSQL para Production y para Preview.
+2. Cargar `DATABASE_URL` y `DIRECT_DATABASE_URL` en Vercel por entorno.
+3. Restablecer el vínculo del proyecto en Vercel (`.vercel/project.json` apunta a
+   un proyecto ya no accesible).
+
+Orden recomendado una vez cerrada INFRA-001:
+
+1. `EP-002.1 — Guest Order Identity`
+2. `SEC-002 — Unified Route Protection`
+3. `TEST-001 — Isolated Test Infrastructure`
+4. `EP-007 — WhatsApp Cloud API`

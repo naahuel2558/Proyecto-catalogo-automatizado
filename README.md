@@ -1,120 +1,186 @@
-# 🥪 MEMORIA COMPLETA DEL PROYECTO: IA ENTRE PANES
+# 🥪 IA ENTRE PANES
 
-Sistema inteligente de automatización de pedidos por WhatsApp y Catálogo Web interactivo para la rotisería **"Entre Panes"**.
+Catálogo web y sistema de pedidos para la rotisería **Entre Panes**.
 
----
-
-## 📌 1. Visión General y Problema a Solucionar
-
-* **Negocio**: Rotisería & Casa de Comidas *"Entre Panes"*.
-* **Número de WhatsApp de la Rotisería**: `+54 9 3585 762463` (`5493585762463`).
-* **URL en Vivo (Producción Vercel)**: **[https://entrepanes-iota.vercel.app](https://entrepanes-iota.vercel.app)**.
-* **Problema Resuelto**: Eliminación de la atención manual por WhatsApp en horas pico. Ahora los clientes reciben una respuesta automática inmediata con el catálogo web, arman su carrito con botones directos `- 0 +` y envían su recibo listo directamente a la rotisería.
+> Este README describe la arquitectura **real** del repositorio. Las funcionalidades
+> pendientes están marcadas como tales; no se documentan como terminadas.
 
 ---
 
-## 🔄 2. Flujo Completo de la Experiencia (Paso a Paso)
+## 1. Qué hace hoy
 
-```mermaid
-sequenceDiagram
-    autonumber
-    actor Cliente
-    participant WA as 💬 WhatsApp Rotisería (+54 9 3585 762463)
-    participant Web as 🍔 Catálogo Web (Vercel)
-    participant Cocina as 👨‍🍳 Vista Recibos (/cocina)
+| Área | Estado | Ruta |
+|---|---|---|
+| Catálogo público desde base de datos | ✅ Operativo | `/` |
+| Autenticación (Google + email/contraseña) | ✅ Operativo | `/login`, `/registro` |
+| Secure Checkout (precios calculados en servidor) | ✅ Operativo | `/` |
+| Administración de productos | ✅ Operativo | `/admin/productos` |
+| Administración de categorías | ✅ Operativo | `/admin/categorias` |
+| Cocina sobre pedidos persistidos | ✅ Operativo | `/cocina` |
+| CRM de clientes | ✅ Operativo | `/admin/clientes` |
+| Perfil e historial | ✅ Operativo | `/perfil` |
+| Confirmación automática por WhatsApp | ⛔ Pendiente | EP-007 |
+| Envío automático de recibos | ⛔ Deshabilitado | P0-001 |
+| PostgreSQL de producción | ⚠️ Preparado, sin aprovisionar | INFRA-001 |
 
-    Cliente->>WA: Envia primer mensaje por WhatsApp
-    WA->>Cliente: Saludo automático + 🔗 Link a https://entrepanes-iota.vercel.app
-    Cliente->>Web: Ingresa a la web y selecciona productos con botones (- 0 +)
-    Web-->>Cliente: Calcula la suma total en tiempo real
-    Cliente->>Web: Presiona "COMPRAR" (Formulario con +54 pre-configurado)
-    Web-->>WA: Redirige a WhatsApp enviando el Recibo del Pedido a la rotisería
-    Web->>Cocina: Registra la comanda en la vista del personal del local
+---
+
+## 2. Stack
+
+- **Next.js 16.3.1** (App Router, Server Components y Server Actions)
+- **React 19.2.8**
+- **TypeScript 5**
+- **Prisma 5.22** como ORM
+- **SQLite** en desarrollo local — *no apto para producción, ver §5*
+- **NextAuth 4** con estrategia JWT
+- **Tailwind CSS 4**
+- Gestor de paquetes: **npm** (`package-lock.json` es el único lockfile)
+
+---
+
+## 3. Arquitectura
+
+### Catálogo
+
+Los productos y categorías viven en la base de datos, **no** en código.
+`src/app/page.tsx` es un Server Component que consulta Prisma a través de
+`src/lib/data/products.ts` y pasa los datos a `<MenuClient />`.
+
+`src/lib/data/menu.ts` conserva el catálogo original **únicamente** como fixture
+de `prisma/seed.ts`. No participa del runtime.
+
+### Secure Checkout
+
+El navegador envía exclusivamente `productId` y `quantity`. Cualquier campo extra
+(`price`, `total`, `orderCode`, `userId`…) es rechazado.
+
+El servidor consulta cada `Product`, verifica disponibilidad, **recalcula los
+precios desde la base**, calcula el total, genera un `orderCode` (`EP-` + 10 hex)
+y crea la `Order` en estado `WAITING_WHATSAPP` dentro de una transacción.
+
+Cada `OrderItem` guarda un **snapshot inmutable** de `productName` y `unitPrice`:
+cambiar el precio de un producto no altera los pedidos históricos.
+
+Manipular el precio desde el navegador no modifica el pedido real.
+
+### Cocina
+
+`/cocina` lee `Order`/`OrderItem` desde Prisma, protegida con rol `ADMIN`.
+Máquina de estados server-side:
+
+```
+WAITING_WHATSAPP → CONFIRMED → PREPARING → READY → DELIVERED
+         │              │           │
+         └──────────────┴───────────┴──→ CANCELLED
 ```
 
----
+Las transiciones son condicionales (`updateMany` por `id` + `status`), de modo que
+dos operadores concurrentes no pueden pisarse el estado.
 
-## 🛠️ 3. Especificaciones Técnicas e Implementación
+### Autorización
 
-### A. Catálogo Web Interactivo (`src/app/page.tsx`)
-* **Controles Directos `- 0 +`**: Cada tarjeta de producto permite sumar o restar unidades de manera inmediata.
-* **Suma en Tiempo Real**: Barra flotante inferior que calcula la cantidad de ítems e importe total en pesos ARS.
-* **Formulario de Compra**:
-  * 👤 **Nombre Completo**.
-  * 📞 **Celular (WhatsApp)**: Pre-configurado por defecto con `+54 ` para evitar errores de código de país.
-  * 📍 **Aclaración del Lugar / Dirección de Envío**.
-* **Destino del Recibo**: Al hacer clic en *"Generar y Enviar Recibo a WhatsApp"*, se abre WhatsApp con la comanda dirigida a la rotisería (`+54 9 3585 762463`).
+- Páginas: `requireAdminPage()` — redirige a `/login` sin sesión, a `/` sin rol.
+- Server Actions: `assertAdminActor()` sobre la sesión del servidor.
 
-### B. Vista de Recibos para el Personal (`src/app/cocina/page.tsx`)
-* Accesible mediante el enlace **`https://entrepanes-iota.vercel.app/cocina`**.
-* Muestra los recibos entrantes en tiempo real con datos del cliente, dirección, ítems y botón de **"Despachar Pedido"**.
+El rol **nunca** se acepta desde el navegador.
 
-### C. Agente Bot de WhatsApp (`src/lib/whatsapp/bot.ts`)
-* Integración con `@whiskeysockets/baileys` para vincular el número de la rotisería escaneando código QR (`npm run whatsapp`).
-* Responde automáticamente a cualquier mensaje inicial con la plantilla de saludo y el enlace oficial a Vercel.
+> ⚠️ No existe `middleware.ts`. La protección depende de que cada página nueva
+> invoque el guard. Unificarlo es la tarea `SEC-002`.
 
 ---
 
-## 📝 4. Formato de Mensajes y Recibo
+## 4. WhatsApp
 
-### Saludo Automático por WhatsApp:
-```text
-Buenas noches! Te estás comunicando con *Entre Panes*. ¿Qué te preparamos hoy? 😎
+**El envío automático de recibos está deshabilitado** (P0-001).
 
-Somos *ENTRE PANES*! 🥪🍔🍟
+`/api/send-receipt` respondía enviando un mensaje, desde el número del negocio,
+al teléfono recibido en el body. Como `Order` no persiste `customerPhone`, el
+servidor no podía demostrar que ese número perteneciera al pedido. La ruta ahora
+responde `410` y no importa el bot.
 
-Horario de atención: Lunes a Domingos de 19:30hs a 23:30hs!
+**Lo que sí funciona:** el checkout devuelve `whatsappUrl`, un enlace `wa.me`
+construido en servidor desde la Order ya validada, que el cliente abre a mano.
 
-*Recordá que para ver precios, nuestros productos y realizar tu pedido, ingresá al siguiente link:*
+`src/lib/whatsapp/bot.ts` (Baileys) es una **herramienta de desarrollo local**,
+atada a `127.0.0.1`. No es infraestructura de producción. La integración real
+usará WhatsApp Cloud API en EP-007.
 
-⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️
+---
 
-https://entrepanes-iota.vercel.app
+## 5. Base de datos y entornos
 
-Estamos a tu disposición!
+La conexión se resuelve por `DATABASE_URL`. **No hay URLs hardcodeadas.**
 
-📍*IMPORTANTE*: 
+| Entorno | Base | Estado |
+|---|---|---|
+| Local | SQLite (`file:./dev.db`) | ✅ En uso |
+| Preview | PostgreSQL separada de producción | ⚠️ Sin aprovisionar |
+| Production | PostgreSQL persistente | ⚠️ Sin aprovisionar |
 
-👉🏻 ALIAS: entrepanes.mp
-🧒🏻 Titular: ENTRE PANES S.A.S.
-📞 Teléfono: +54 9 3585 762463
+> ⚠️ **SQLite no es viable en producción.** El despliegue corre sobre un
+> filesystem efímero: los pedidos escritos allí no persisten. Aprovisionar
+> PostgreSQL es el bloqueo abierto de `INFRA-001`.
 
-*LAS PROMOS SON SOLAMENTE EN EFECTIVO*
+Migraciones en producción: **siempre** `prisma migrate deploy`.
+Nunca `migrate dev`, `db push` ni `migrate reset`.
+
+---
+
+## 6. Puesta en marcha
+
+```bash
+npm install
+cp .env.example .env    # completar valores
+npx prisma migrate deploy
+npx prisma db seed      # opcional: catálogo inicial
+npm run dev
 ```
 
-### Recibo Estructurado Generado tras "COMPRAR":
-```text
-_Entre Panes - Recibo de Pedido_
-
-_Número de pedido:_
-1001
-
-_Nombre:_
-Juan Pérez
-
-_Celular del cliente:_
-+54 9 11 2233 4455
-
-_Dirección / Aclaración del lugar:_
-Calle Falsa 123 (esq. San Martín)
-
-_Fecha y Hora:_
-21-08-2026 - 21:30
-
-1x _Lomo Entre Panes Especial_
-1x _Sándwich de Milanesa Completo_
-1x _Papas Fritas Grandes con Cheddar_
-
-_Valor Total:_
-$23000.00
-```
+`.env.example` documenta cada variable. Nunca se versionan valores reales.
 
 ---
 
-## 🚀 5. Despliegue y Comandos
+## 7. Comandos
 
-* **URL Producción en Vercel**: `https://entrepanes-iota.vercel.app`
-* **Vista de Recibos Local**: `http://localhost:3000/cocina`
-* **Ejecutar servidor local**: `npm run dev`
-* **Ejecutar Bot de WhatsApp**: `npm run whatsapp`
-* **Desplegar a Vercel**: `npx vercel deploy --yes --prod --token <TOKEN>`
+| Comando | Qué hace |
+|---|---|
+| `npm run dev` | Servidor de desarrollo |
+| `npm run build` | `prisma generate` + build de producción |
+| `npm run lint` | ESLint |
+| `npm run whatsapp` | Bot Baileys local (vinculación por QR) |
+| `npm run test:secure-checkout` | Checkout seguro, casos A–J |
+| `npm run test:product-admin` | Admin de productos, A–K |
+| `npm run test:category-admin` | Admin de categorías, A–L |
+| `npm run test:kitchen` | Cocina, A–P |
+| `npm run test:receipt-security` | Contención del endpoint, A–D |
+| `npm run test:admin-routes` | Regresión HTTP por rol |
+
+### Los tests escriben en la base
+
+Todas las suites **crean y eliminan** registros. `scripts/_guard-test-db.ts` corre
+como primer import y **aborta** si `DATABASE_URL` no es SQLite local, salvo que se
+declare explícitamente `TEST_DATABASE_URL`.
+
+Nunca apuntar las suites a producción.
+
+---
+
+## 8. Documentación del proyecto
+
+- `PLAN.md` — roadmap y estado real de cada tarea.
+- `auditorias/` — un informe por tarea completada, con validaciones y riesgos.
+- `cambios-31-8-26/PROMPTS.md` — prompts de trabajo.
+
+---
+
+## 9. Deuda técnica conocida
+
+| Id | Tema |
+|---|---|
+| `INFRA-001` | Aprovisionar PostgreSQL para Preview y Production |
+| `EP-002.1` | Persistir `customerName`/`customerPhone` en `Order` |
+| `SEC-002` | Unificar la protección de rutas en un middleware |
+| `TEST-001` | Runner real (Vitest) y base de test efímera |
+| `DOMAIN-001` | Convertir `Order.status` y `User.role` a enums de PostgreSQL |
+| `EP-007` | WhatsApp Cloud API |
+| — | El blob de `prisma/dev.db` sigue en el historial de Git (commit `15c400d`) |

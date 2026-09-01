@@ -1,3 +1,5 @@
+// INFRA-001: debe ser el PRIMER import — aisla la base de tests de Production.
+import './_guard-test-db';
 import assert from 'node:assert/strict';
 import crypto from 'node:crypto';
 import { readFileSync } from 'node:fs';

@@ -1,6 +1,11 @@
+// INFRA-001 — La URL de conexion se resuelve por variable de entorno.
+// El provider permanece en sqlite hasta que exista una instancia PostgreSQL
+// aprovisionada. El cambio a postgresql esta documentado en
+// auditorias/INFRA-001-postgresql-foundation-report.md y es una edicion de dos
+// lineas: provider = "postgresql" y directUrl = env("DIRECT_DATABASE_URL").
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
